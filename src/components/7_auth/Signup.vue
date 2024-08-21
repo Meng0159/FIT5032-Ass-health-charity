@@ -208,14 +208,49 @@ const validatePassword = () => {
   }
 }
 
+const clearForm = () => {
+  formData.value = {
+    fullName: '',
+    email: '',
+    phoneNumber: '',
+    dob: '',
+    gender: '',
+    country: '',
+    postcode: '',
+    role: '',
+    password: '',
+    subscribe: false
+  }
+}
+
 const handleSubmit = () => {
   validateEmail()
   validatePassword(true)
   // Add validation for other fields as needed
   const hasErrors = Object.values(errors.value).some((error) => error !== null)
   if (!hasErrors) {
+    // Retrieve existing users from local storage
+    let users = JSON.parse(localStorage.getItem('users')) || []
+
+    // Add the new user to the array
+    users.push({
+      fullName: formData.value.fullName,
+      email: formData.value.email,
+      phoneNumber: formData.value.phoneNumber,
+      dob: formData.value.dob,
+      gender: formData.value.gender,
+      country: formData.value.country,
+      postcode: formData.value.postcode,
+      role: formData.value.role,
+      subscribe: formData.value.subscribe
+    })
+
+    // Save the updated users array back to local storage
+    localStorage.setItem('users', JSON.stringify(users))
+
     alert('Registration successful!')
-    // Proceed with form submission or user creation logic
+    // Clear the form or navigate away after registration
+    clearForm()
   }
 }
 </script>

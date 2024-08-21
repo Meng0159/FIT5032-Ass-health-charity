@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="login-page container py-5">
     <div class="col-auto">
@@ -6,7 +7,7 @@
       </a>
     </div>
     <h2 class="text-center mb-4">Login</h2>
-    <form @submit.prevent="handleSubmit" class="mx-auto" style="max-width: 400px">
+    <form @submit.prevent="handleLogin" class="mx-auto" style="max-width: 400px">
       <div class="form-group mb-3">
         <label for="email">Email</label>
         <input
@@ -43,68 +44,39 @@
   </div>
 </template>
 
-<script>
-import { reactive } from 'vue'
+<script setup>
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-export default {
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: 'Login',
-  setup() {
-    const formData = reactive({
-      email: '',
-      password: ''
-    })
+const formData = reactive({
+  email: '',
+  password: ''
+})
 
-    const errors = reactive({
-      email: null,
-      password: null
-    })
+const errors = reactive({
+  email: null,
+  password: null
+})
 
-    const validateEmail = () => {
-      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-      if (!emailPattern.test(formData.email)) {
-        errors.email = 'Please enter a valid email address.'
-      } else {
-        errors.email = null
-      }
-    }
+const errorMessage = ref('')
+const router = useRouter()
 
-    const validatePassword = () => {
-      const password = formData.password
-      const minLength = 8
-      const hasUppercase = /[A-Z]/.test(password)
-      const hasLowercase = /[a-z]/.test(password)
-      const hasNumber = /\d/.test(password)
-      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+const validateEmail = () => {
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  if (!emailPattern.test(formData.email)) {
+    errors.email = 'Please enter a valid email address.'
+  } else {
+    errors.email = null
+  }
+}
 
-      if (password.length < minLength) {
-        errors.password = 'Password must be at least 8 characters long.'
-      } else if (!hasUppercase) {
-        errors.password = 'Password must contain at least one uppercase letter.'
-      } else if (!hasLowercase) {
-        errors.password = 'Password must contain at least one lowercase letter.'
-      } else if (!hasNumber) {
-        errors.password = 'Password must contain at least one number.'
-      } else if (!hasSpecialChar) {
-        errors.password = 'Password must contain at least one special character.'
-      } else {
-        errors.password = null
-      }
-    }
-
-    const handleSubmit = () => {
-      validateEmail()
-      validatePassword()
-      if (!errors.email && !errors.password) {
-        alert('Login successful!')
-        // Proceed with form submission or authentication logic
-      }
-    }
-
-    return {
-      formData,
-      errors,
-      handleSubmit
+const handleLogin = () => {
+  validateEmail()
+  if (!errors.email && !errors.password) {
+    if (formData.email === 'admin@health.com' && formData.password === 'admin') {
+      router.push('/manager') // Navigate to the manager page
+    } else {
+      errorMessage.value = 'Invalid email or password.'
     }
   }
 }

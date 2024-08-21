@@ -44,9 +44,12 @@ export default {}
 
 <template>
   <ul
-    :class="['navbar-nav', isOffCanvas ? 'flex-column' : 'd-flex flex-row justify-content-center']"
+    :class="[
+      'navbar-nav',
+      isSidebarOpen ? 'flex-column' : 'd-flex flex-row justify-content-center'
+    ]"
   >
-    <li class="nav-item mx-2" v-for="link in links" :key="link.href">
+    <li class="nav-item" v-for="link in links" :key="link.href">
       <a class="nav-link" :href="link.href">{{ link.text }}</a>
     </li>
   </ul>
@@ -55,7 +58,7 @@ export default {}
 <script>
 export default {
   props: {
-    isOffCanvas: {
+    isSidebarOpen: {
       type: Boolean,
       default: false
     }
@@ -63,8 +66,8 @@ export default {
   data() {
     return {
       links: [
-        { text: 'About', href: '/about' },
-        { text: 'News', href: '/news' }
+        { text: 'Home', href: '/' },
+        { text: 'About', href: '/about' }
         // Add other links as needed
       ]
     }
@@ -73,14 +76,13 @@ export default {
 </script>
 
 <style scoped>
-.navbar-nav .nav-link {
-  color: rgb(88, 31, 31);
-  margin: 0 10px;
-}
 .navbar-nav.flex-column .nav-item {
-  margin-bottom: 10px;
+  margin-bottom: 10px; /* Adds space between items when in vertical layout */
+}
+.navbar-nav .nav-link {
+  color: rgb(68, 9, 9);
 }
 .navbar-nav .nav-link:hover {
-  color: #0e467f;
+  color: #17497b;
 }
 </style>

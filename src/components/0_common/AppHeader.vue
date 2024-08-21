@@ -55,7 +55,7 @@
       </div>
       <div class="offcanvas-body">
         <!-- Reuse the Navbar component inside the off-canvas -->
-        <Navbar :isOffCanvas="true" />
+        <Navbar :isSidebarOpen="true" />
         <hr />
         <a class="btn btn-outline-light w-100 my-2" href="/login">Login</a>
         <a class="btn btn-light w-100 my-2" href="/signup">Sign Up</a>
