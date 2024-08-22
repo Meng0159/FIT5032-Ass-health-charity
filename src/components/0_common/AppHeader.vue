@@ -4,10 +4,15 @@
     <div class="container-fluid">
       <div class="row justify-content-between align-items-center w-100">
         <!-- Logo on the left -->
-        <div class="col-auto">
-          <a class="navbar-brand" href="/" style="padding-left: 15px">
+        <div class="logo col-auto d-flex align-items-center">
+          <router-link
+            class="navbar-brand"
+            to="/"
+            style="display: flex; align-items: center; padding-left: 15px"
+          >
             <img src="@/assets/images/logo.png" alt="Logo" height="40" />
-          </a>
+            <h4 style="margin-left: 10px; margin-bottom: 0">Healthy</h4>
+          </router-link>
         </div>
 
         <!-- Navigation links centered (imported from Navbar component) -->
@@ -17,8 +22,8 @@
 
         <!-- Login/Sign Up buttons on the right -->
         <div class="col-auto d-none d-lg-flex">
-          <a class="btn btn-outline-light mx-2" href="/login">Login</a>
-          <a class="btn btn-light mx-2" href="/signup">Sign Up</a>
+          <router-link class="btn btn-outline-light mx-2" to="/login">Login</router-link>
+          <router-link class="btn btn-light mx-2" to="/signup">Sign Up</router-link>
         </div>
 
         <!-- Toggler for smaller screens -->
@@ -76,10 +81,19 @@ export default {
 
 <style scoped>
 .navbar {
-  background-color: #e59b4c; /* Remove the blue background */
+  background-color: #f6ca9c; /* Remove the blue background */
 }
+
+.logo.col-auto {
+  margin-left: 5px;
+  background-color: #e5914c;
+  padding-left: 0px;
+  border-radius: 0.3rem;
+  box-shadow: 0px 2px 4px rgba(149, 146, 146, 0.2);
+}
+
 .navbar-brand img {
-  padding-left: 15px;
+  padding-left: 5px;
 }
 .btn-outline-light {
   border-color: #ffffff;

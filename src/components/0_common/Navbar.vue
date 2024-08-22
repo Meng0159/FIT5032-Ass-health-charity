@@ -43,14 +43,11 @@ export default {}
 </style> -->
 
 <template>
-  <ul
-    :class="[
-      'navbar-nav',
-      isSidebarOpen ? 'flex-column' : 'd-flex flex-row justify-content-center'
-    ]"
-  >
+  <ul :class="['nav nav-pills nav-justified', isSidebarOpen ? 'flex-column' : 'd-flex flex-row']">
     <li class="nav-item" v-for="link in links" :key="link.href">
-      <a class="nav-link" :href="link.href">{{ link.text }}</a>
+      <router-link class="nav-link" active-class="active" aria-current="page" :to="link.href">{{
+        link.text
+      }}</router-link>
     </li>
   </ul>
 </template>
@@ -66,8 +63,10 @@ export default {
   data() {
     return {
       links: [
-        { text: 'Home', href: '/' },
-        { text: 'About', href: '/about' }
+        { text: 'About', href: '/about' },
+        { text: 'News', href: '/news' },
+        { text: 'Donate', href: '/donate' }
+
         // Add other links as needed
       ]
     }
@@ -76,13 +75,21 @@ export default {
 </script>
 
 <style scoped>
-.navbar-nav.flex-column .nav-item {
+.nav .d-flex {
+  margin: 10px; /* Adds space above the items */
+}
+
+.nav-pills .nav-link.active {
+  color: rgb(11, 18, 228);
+  background-color: #abcce6;
+}
+.nav-pills .nav-link {
+  color: rgb(85, 27, 7);
+}
+.nav.flex-column .nav-item {
   margin-bottom: 10px; /* Adds space between items when in vertical layout */
 }
-.navbar-nav .nav-link {
-  color: rgb(68, 9, 9);
-}
-.navbar-nav .nav-link:hover {
-  color: #17497b;
+.nav.flex-column .nav-item:last-child {
+  margin-bottom: 0; /* Removes space below the last item */
 }
 </style>

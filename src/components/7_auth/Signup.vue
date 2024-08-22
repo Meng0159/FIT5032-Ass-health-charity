@@ -189,14 +189,11 @@ const validateEmail = () => {
 const validatePassword = () => {
   const password = formData.value.password
   const minLength = 8
-  const hasUppercase = /[A-Z]/.test(password)
   const hasLowercase = /[a-z]/.test(password)
   const hasNumber = /\d/.test(password)
   const hasSpecialChar = /[!@#$%^&*(),.?":(}|<>]/.test(password)
   if (password.length < minLength) {
     errors.value.password = 'Password must be at least 8 characters long.'
-  } else if (!hasUppercase) {
-    errors.value.password = 'Password must contain at least one uppercase letter.'
   } else if (!hasLowercase) {
     errors.value.password = 'Password must contain at least one lowercase letter.'
   } else if (!hasNumber) {
@@ -222,6 +219,9 @@ const clearForm = () => {
     subscribe: false
   }
 }
+const generateUserId = () => {
+  return '_' + Math.random().toString(36).substr(2, 9)
+}
 
 const handleSubmit = () => {
   validateEmail()
@@ -229,11 +229,8 @@ const handleSubmit = () => {
   // Add validation for other fields as needed
   const hasErrors = Object.values(errors.value).some((error) => error !== null)
   if (!hasErrors) {
-    // Retrieve existing users from local storage
-    let users = JSON.parse(localStorage.getItem('users')) || []
-
-    // Add the new user to the array
-    users.push({
+    const newUser = {
+      id: generateUserId(),
       fullName: formData.value.fullName,
       email: formData.value.email,
       phoneNumber: formData.value.phoneNumber,
@@ -242,8 +239,14 @@ const handleSubmit = () => {
       country: formData.value.country,
       postcode: formData.value.postcode,
       role: formData.value.role,
+      password: formData.value.password,
       subscribe: formData.value.subscribe
-    })
+    }
+    // Retrieve existing users from local storage
+    let users = JSON.parse(localStorage.getItem('users')) || []
+
+    // Add the new user to the array
+    users.push(newUser)
 
     // Save the updated users array back to local storage
     localStorage.setItem('users', JSON.stringify(users))

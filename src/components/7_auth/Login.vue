@@ -45,8 +45,9 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import managers from '@/data/managers.json'
 
 const formData = reactive({
   email: '',
@@ -58,7 +59,6 @@ const errors = reactive({
   password: null
 })
 
-const errorMessage = ref('')
 const router = useRouter()
 
 const validateEmail = () => {
@@ -73,10 +73,35 @@ const validateEmail = () => {
 const handleLogin = () => {
   validateEmail()
   if (!errors.email && !errors.password) {
-    if (formData.email === 'admin@health.com' && formData.password === 'admin') {
+    // Check if the user is a manager
+    // if (formData.email === 'admin@health.com' && formData.password === 'admin') {
+    //   router.push('/manager') // Navigate to the manager page
+    // } else {
+    //   errorMessage.value = 'Invalid email or password.'
+    // }
+    const manager = managers.find(
+      (manager) => manager.email === formData.email && manager.password === formData.password
+    )
+
+    if (manager) {
+      alert('Login successful!')
+      // Store manager login state in localStorage
+      localStorage.setItem('manager', JSON.stringify({ loggedIn: true }))
       router.push('/manager') // Navigate to the manager page
+      return
+    }
+
+    // If not a manager, check the local storage for user data
+    const users = JSON.parse(localStorage.getItem('users')) || []
+    const user = users.find(
+      (user) => user.email === formData.email && user.password === formData.password
+    )
+
+    if (user) {
+      alert('Login successful!')
+      router.push('/user-dashboard') // Navigate to the user dashboard page or any other user-specific page
     } else {
-      errorMessage.value = 'Invalid email or password.'
+      alert('Invalid email or password.')
     }
   }
 }
