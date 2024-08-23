@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Mental Health Awareness Lecture",
+    "date": "2024-09-15",
+    "location": "Melbourne Convention Centre",
+    "host": "Mental Health Foundation"
+  },
+  {
+    "name": "Networking for Mental Health Professionals",
+    "date": "2024-09-22",
+    "location": "Sydney Conference Hall",
+    "host": "Mental Health Network"
+  },
+  {
+    "name": "Mindfulness Workshop",
+    "date": "2024-10-05",
+    "location": "Brisbane Wellness Centre",
+    "host": "Brisbane Wellness Group"
+  }
+]

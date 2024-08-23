@@ -1,0 +1,30 @@
+[
+  {
+    "title": "Latest Research on Mental Health",
+    "Category": "Journal",
+    "resource": "Health Journal",
+    "Keywords": "Research, Mental Health",
+    "link": "https://healthjournal.com/research-mental-health"
+  },
+  {
+    "title": "Childhood Inflammation Linked to Later Mental Health Risks",
+    "Category": "News",
+    "resource": "Neuroscience News",
+    "Keywords": "Childhood, Neuroscience, Psychology",
+    "link": "https://neurosciencenews.com/childhood-inflammation-mental-health-27566/"
+  },
+  {
+    "title": "Featured Article: Coping Strategies",
+    "Category": "Magazine",
+    "resource": "Mind Matters",
+    "Keywords": "Coping, Strategies, Mental Health",
+    "link": "https://mindmatters.com/coping-strategies"
+  },
+  {
+    "title": "Advancements in Therapy Techniques",
+    "Category": "Therapy",
+    "resource": "Therapist Weekly",
+    "Keywords": "Therapy, Techniques, Advancements",
+    "link": "https://therapistweekly.com/therapy-advancements"
+  }
+]

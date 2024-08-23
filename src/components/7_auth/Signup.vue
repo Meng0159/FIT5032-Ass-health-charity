@@ -26,7 +26,7 @@
           class="form-control"
           :class="{ 'is-invalid': errors.email }"
           placeholder="Enter your email"
-          required
+          @blur="validateEmail"
         />
         <div v-if="errors.email" class="invalid-feedback">{{ errors.email }}</div>
       </div>
@@ -40,7 +40,7 @@
           class="form-control"
           :class="{ 'is-invalid': errors.phoneNumber }"
           placeholder="Enter your phone number"
-          required
+          @blur="() => validatePhoneNumber(true)"
         />
         <div v-if="errors.phoneNumber" class="invalid-feedback">{{ errors.phoneNumber }}</div>
       </div>
@@ -95,6 +95,8 @@
               class="form-control"
               :class="{ 'is-invalid': errors.postcode }"
               placeholder="Enter your postcode"
+              min="1000"
+              max="9999"
               required
             />
             <div v-if="errors.postcode" class="invalid-feedback">{{ errors.postcode }}</div>
@@ -117,18 +119,31 @@
         </select>
         <div v-if="errors.role" class="invalid-feedback">{{ errors.role }}</div>
       </div>
+      <div class="row mb-3">
+        <div class="col-md-6 col-sm-6 form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            @blur="() => validatePassword(true)"
+            @input="() => validatePassword(false)"
+            v-model="formData.password"
+          />
+          <div class="text-danger" v-if="errors.password">{{ errors.password }}</div>
+        </div>
 
-      <div class="form-group mb-3">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          @blur="() => validatePassword(true)"
-          @input="() => validatePassword(false)"
-          v-model="formData.password"
-        />
-        <div class="text-danger" v-if="errors.password">{{ errors.password }}</div>
+        <div class="col-md-6 col-sm-6 form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            v-model="formData.confirmPassword"
+            @blur="() => validateConfirmPassword(true)"
+          />
+          <div class="text-danger" v-if="errors.confirmPassword">{{ errors.confirmPassword }}</div>
+        </div>
       </div>
 
       <div class="form-group mb-3 form-check">
@@ -138,10 +153,11 @@
           v-model="formData.subscribe"
           class="form-check-input"
         />
-        <label for="subscribe" class="form-check-label">Subscribe to our nwes</label>
+        <label for="subscribe" class="form-check-label">Subscribe to our newsletter</label>
       </div>
-
-      <button type="submit" class="btn btn-primary w-100">SignUp</button>
+      <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary">SignUp</button>
+      </div>
     </form>
     <div class="text-center mt-3">
       <p>Already have an account? <a href="/login">Login</a></p>
@@ -205,6 +221,23 @@ const validatePassword = () => {
   }
 }
 
+const validateConfirmPassword = (blur) => {
+  if (formData.value.password !== formData.value.confirmPassword) {
+    if (blur) errors.value.confirmPassword = 'Passwords do not match.'
+  } else {
+    errors.value.confirmPassword = null
+  }
+}
+
+const validatePhoneNumber = () => {
+  const phonePattern = /^\d{10}$/
+  if (!phonePattern.test(formData.value.phoneNumber)) {
+    errors.value.phoneNumber = 'Please enter a valid phone number.'
+  } else {
+    errors.value.phoneNumber = null
+  }
+}
+
 const clearForm = () => {
   formData.value = {
     fullName: '',
@@ -226,6 +259,7 @@ const generateUserId = () => {
 const handleSubmit = () => {
   validateEmail()
   validatePassword(true)
+  validatePhoneNumber(true)
   // Add validation for other fields as needed
   const hasErrors = Object.values(errors.value).some((error) => error !== null)
   if (!hasErrors) {
