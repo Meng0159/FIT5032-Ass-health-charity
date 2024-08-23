@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <h1 class="mb-4">Donate Now</h1>
+    <!-- <h1 class="mb-4">Donate Now</h1> -->
     <form @submit.prevent="submitDonation">
       <!-- Donation Amount Section -->
       <div class="row">
@@ -76,7 +76,7 @@
       </div>
 
       <!-- User Details Section -->
-      <div class="row">
+      <div v-if="formType === 'individual'" class="row">
         <div class="col-md-6 mb-3">
           <label for="firstName" class="form-label">First Name:</label>
           <input
@@ -98,6 +98,31 @@
             required
           />
           <div v-if="errors.lastName" class="invalid-feedback">{{ errors.lastName }}</div>
+        </div>
+      </div>
+
+      <div v-else-if="formType === 'Organisation'" class="row">
+        <div class="col-md-6 mb-3">
+          <label for="orgName" class="form-label">Organisation Name:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="orgName"
+            v-model="donationFields.orgName"
+            required
+          />
+          <div v-if="errors.orgName" class="invalid-feedback">{{ errors.orgName }}</div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="contactName" class="form-label">Contact Name:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="contactName"
+            v-model="donationFields.contactName"
+            required
+          />
+          <div v-if="errors.contactName" class="invalid-feedback">{{ errors.contactName }}</div>
         </div>
       </div>
 
@@ -245,11 +270,15 @@
 <script setup>
 import { ref } from 'vue'
 
+const formType = ref('Organisation') // 'individual' or 'Organisation'
+
 const donationFields = ref({
   amount: '',
   customAmount: '',
   firstName: '',
   lastName: '',
+  orgName: '',
+  contactName: '',
   email: '',
   phone: '',
   postCode: '',
@@ -263,6 +292,8 @@ const errors = ref({
   amount: null,
   firstName: null,
   lastName: null,
+  orgName: null,
+  contactName: null,
   email: null,
   phoneNumber: null,
   postCode: null
@@ -317,7 +348,10 @@ const submitDonation = () => {
   ) {
     const donationData = {
       amount: donationFields.value.customAmount || donationFields.value.amount,
-      name: `${donationFields.value.firstName} ${donationFields.value.lastName}`,
+      name:
+        formType.value === 'individual'
+          ? `${donationFields.value.firstName} ${donationFields.value.lastName}`
+          : `${donationFields.value.orgName} (${donationFields.value.contactName})`,
       email: donationFields.value.email,
       phone: donationFields.value.phone,
       city: donationFields.value.city,
@@ -342,6 +376,8 @@ const resetForm = () => {
     customAmount: '',
     firstName: '',
     lastName: '',
+    orgName: '',
+    contactName: '',
     email: '',
     phone: '',
     postCode: '',

@@ -1,10 +1,11 @@
 <template>
   <div class="donate">
     <AppHeader />
-    <h1>Support Our Cause</h1>
-    <p>
-      Your donation will help us continue to provide free coding education to people around the
-      world.
+    <h1 class="text-start">Support Our Mission</h1>
+    <p class="lead text-start">
+      Your donation plays a crucial role in providing free mental health resources and support to
+      those who need it the most. Together, we can make a difference in the lives of countless
+      individuals and communities.
     </p>
     <div v-if="averageRating !== null" class="rating">
       <span>Overall experience rating:</span>
@@ -20,7 +21,76 @@
       </div>
       <span class="rating-value">({{ averageRating.toFixed(1) }})</span>
     </div>
-    <DonateForm />
+
+    <p class="text-start">
+      Choose how you'd like to contribute and help us continue our mission to spread awareness and
+      provide much-needed services.
+    </p>
+
+    <div class="donation-tabs mt-5">
+      <ul class="nav nav-tabs" id="donationTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="individual-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#individual"
+            type="button"
+            role="tab"
+            aria-controls="individual"
+            aria-selected="true"
+          >
+            Individual Donation
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="organization-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#organization"
+            type="button"
+            role="tab"
+            aria-controls="organization"
+            aria-selected="false"
+          >
+            Organization Donation
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content mt-4" id="donationTabContent">
+        <!-- Individual Donation Form -->
+        <div
+          class="tab-pane fade show active"
+          id="individual"
+          role="tabpanel"
+          aria-labelledby="individual-tab"
+        >
+          <h3>Donate as an Individual</h3>
+          <p>
+            Your contribution as an individual can make a significant impact. Every bit counts, and
+            we greatly appreciate your generosity.
+          </p>
+          <DonateForm :formType="'individual'" />
+        </div>
+
+        <!-- Organization Donation Form -->
+        <div
+          class="tab-pane fade"
+          id="organization"
+          role="tabpanel"
+          aria-labelledby="organization-tab"
+        >
+          <h3>Donate as an Organization</h3>
+          <p>
+            Support us as an organization and help us expand our reach. Your partnership can enable
+            us to touch more lives and make a broader impact.
+          </p>
+          <DonateForm :formType="'organization'" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
