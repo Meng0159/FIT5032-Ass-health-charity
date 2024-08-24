@@ -11,7 +11,7 @@
             style="display: flex; align-items: center; padding-left: 15px"
           >
             <img src="@/assets/images/logo.png" alt="Logo" height="40" />
-            <h4 style="margin-left: 10px; margin-bottom: 0">Healthy</h4>
+            <h4 style="margin-left: 10px; margin-bottom: 0">MindSupport</h4>
           </router-link>
         </div>
 
@@ -21,9 +21,15 @@
         </div>
 
         <!-- Login/Sign Up buttons on the right -->
+        <!-- Conditional display of Login/Sign Up or Logout button -->
         <div class="col-auto d-none d-lg-flex">
-          <router-link class="btn btn-outline-light mx-2" to="/login">Login</router-link>
-          <router-link class="btn btn-light mx-2" to="/signup">Sign Up</router-link>
+          <router-link v-if="!isAuthenticated" class="btn btn-outline-light mx-2" to="/login">
+            Login
+          </router-link>
+          <router-link v-if="!isAuthenticated" class="btn btn-light mx-2" to="/signup">
+            Sign Up
+          </router-link>
+          <button v-if="isAuthenticated" class="btn btn-light mx-2" @click="logout">Logout</button>
         </div>
 
         <!-- Toggler for smaller screens -->
@@ -61,21 +67,42 @@
       <div class="offcanvas-body">
         <!-- Reuse the Navbar component inside the off-canvas -->
         <Navbar :isSidebarOpen="true" />
-        <hr />
-        <a class="btn btn-outline-light w-100 my-2" href="/login">Login</a>
-        <a class="btn btn-light w-100 my-2" href="/signup">Sign Up</a>
+        <!--Conditional display: Login/Sign Up or logOut buttons -->
+        <router-link v-if="!isAuthenticated" class="btn btn-outline-light w-100 my-2" to="/login">
+          Login
+        </router-link>
+        <router-link v-if="!isAuthenticated" class="btn btn-light w-100 my-2" to="/signup">
+          Sign Up
+        </router-link>
+        <button v-if="isAuthenticated" class="btn btn-light w-100 my-2" @click="logout">
+          Logout
+        </button>
       </div>
     </div>
   </nav>
 </template>
 
-<script>
+<script setup>
 import Navbar from './Navbar.vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-export default {
-  components: {
-    Navbar
+const isAuthenticated = ref(false)
+const router = useRouter()
+
+// Check if the user is authenticated by checking local storage
+onMounted(() => {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
+  if (currentUser && currentUser.loggedIn) {
+    isAuthenticated.value = true
   }
+})
+
+// Logout function
+const logout = () => {
+  localStorage.removeItem('currentUser')
+  isAuthenticated.value = false
+  router.push('/') // Redirect to home page after logout
 }
 </script>
 

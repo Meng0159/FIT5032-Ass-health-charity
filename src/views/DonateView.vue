@@ -46,15 +46,15 @@
         <li class="nav-item" role="presentation">
           <button
             class="nav-link"
-            id="organization-tab"
+            id="organisation-tab"
             data-bs-toggle="tab"
-            data-bs-target="#organization"
+            data-bs-target="#organisation"
             type="button"
             role="tab"
-            aria-controls="organization"
+            aria-controls="organisation"
             aria-selected="false"
           >
-            Organization Donation
+            Organisation Donation
           </button>
         </li>
       </ul>
@@ -75,19 +75,19 @@
           <DonateForm :formType="'individual'" />
         </div>
 
-        <!-- Organization Donation Form -->
+        <!-- organisation Donation Form -->
         <div
           class="tab-pane fade"
-          id="organization"
+          id="organisation"
           role="tabpanel"
-          aria-labelledby="organization-tab"
+          aria-labelledby="organisation-tab"
         >
-          <h3>Donate as an Organization</h3>
+          <h3>Donate as an organisation</h3>
           <p>
-            Support us as an organization and help us expand our reach. Your partnership can enable
+            Support us as an organisation and help us expand our reach. Your partnership can enable
             us to touch more lives and make a broader impact.
           </p>
-          <DonateForm :formType="'organization'" />
+          <DonateForm :formType="'organisation'" />
         </div>
       </div>
     </div>

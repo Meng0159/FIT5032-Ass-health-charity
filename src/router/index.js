@@ -7,6 +7,24 @@ import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import ManergerView from '../views/ManergerView.vue'
 
+// Helper function to check if the user is authenticated
+function isAuthenticated() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
+  return currentUser && currentUser.loggedIn
+}
+
+// Navigation guard to protect routes that require authentication
+function userAuthenticated(to, from, next) {
+  if (isAuthenticated()) {
+    next() // allow to enter route
+    console.log('user authenticated')
+  } else {
+    alert('Please log in to access.')
+    next('/') // redirect to login if not authenticated
+    console.log('user not authenticated')
+  }
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -26,7 +44,8 @@ const router = createRouter({
     {
       path: '/news',
       name: 'news',
-      component: NewsView
+      component: NewsView,
+      beforeEnter: userAuthenticated
     },
     {
       path: '/donate',
@@ -62,5 +81,21 @@ const router = createRouter({
     }
   ]
 })
+// Global navigation guard for handling home page based on authentication
+router.beforeEach((to, from, next) => {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
 
+  if (to.name === 'home' && currentUser && currentUser.loggedIn) {
+    // Proceed to the home page with logout visible
+    next()
+    console.log('log in to home')
+  } else if (to.name === 'home') {
+    // Proceed to the home page without logout visible
+    next()
+    console.log('log out status')
+  } else {
+    // Proceed to other routes
+    next()
+  }
+})
 export default router

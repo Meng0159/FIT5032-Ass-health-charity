@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <div v-else-if="formType === 'Organisation'" class="row">
+      <div v-else-if="formType === 'organisation'" class="row">
         <div class="col-md-6 mb-3">
           <label for="orgName" class="form-label">Organisation Name:</label>
           <input
@@ -270,7 +270,15 @@
 <script setup>
 import { ref } from 'vue'
 
-const formType = ref('Organisation') // 'individual' or 'Organisation'
+const props = defineProps({
+  formType: {
+    type: String,
+    default: '',
+    validator: (value) => ['individual', 'organisation'].includes(value)
+  }
+})
+
+const formType = ref(props.formType) // 'individual' or 'organisation'
 
 const donationFields = ref({
   amount: '',

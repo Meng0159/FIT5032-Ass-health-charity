@@ -5,33 +5,82 @@
       <router-link to="/" class="logout-btn">Logout</router-link>
     </div>
 
-    <p>Welcome, Manager. Below is the list of donations.</p>
-    <DataTable :value="donationData" responsiveLayout="scroll">
-      <Column field="name" header="Name" />
-      <Column field="email" header="Email" />
-      <Column field="phone" header="Phone Number" />
-      <Column field="amount" header="Amount" />
-      <Column field="message" header="Message" />
-      <Column field="rating" header="Review Rate" />
-      <Column header="Actions">
-        <template #body="slotProps">
-          <button @click="deleteDonation(slotProps.data)" class="remove-btn">Remove</button>
-        </template>
-      </Column>
-    </DataTable>
-    <p>Welcome, Admin. Below is the list of registered users.</p>
-    <button @click="removeUser(selectedUser)" class="remove-btn">Remove User</button>
-    <DataTable :value="users" responsiveLayout="scroll">
-      <Column field="fullName" header="Full Name" />
-      <Column field="email" header="Email" />
-      <Column field="phoneNumber" header="Phone Number" />
-      <Column field="dob" header="Date of Birth" />
-      <Column field="gender" header="Gender" />
-      <Column field="country" header="Country" />
-      <Column field="postcode" header="Postcode" />
-      <Column field="role" header="Role" />
-      <Column field="subscribe" header="Subscribed" />
-    </DataTable>
+    <ul class="nav nav-tabs" id="managerTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          id="donations-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#donations"
+          type="button"
+          role="tab"
+          aria-controls="donations"
+          aria-selected="true"
+        >
+          Donation List
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="users-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#users"
+          type="button"
+          role="tab"
+          aria-controls="users"
+          aria-selected="false"
+        >
+          Registered Users
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content mt-4" id="managerTabContent">
+      <!-- Donations Table -->
+      <div
+        class="tab-pane fade show active"
+        id="donations"
+        role="tabpanel"
+        aria-labelledby="donations-tab"
+      >
+        <p>Below is the list of donations:</p>
+        <DataTable :value="donationData" responsiveLayout="scroll">
+          <Column field="name" header="Name" />
+          <Column field="email" header="Email" />
+          <Column field="phone" header="Phone Number" />
+          <Column field="amount" header="Amount" />
+          <Column field="message" header="Message" />
+          <Column field="rating" header="Review Rate" />
+          <Column header="Actions">
+            <template #body="slotProps">
+              <button @click="deleteDonation(slotProps.data)" class="remove-btn">Remove</button>
+            </template>
+          </Column>
+        </DataTable>
+      </div>
+
+      <!-- Registered Users Table -->
+      <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+        <p>Below is the list of registered users:</p>
+        <DataTable :value="users" responsiveLayout="scroll">
+          <Column field="fullName" header="Full Name" />
+          <Column field="email" header="Email" />
+          <Column field="phoneNumber" header="Phone Number" />
+          <Column field="dob" header="Date of Birth" />
+          <Column field="gender" header="Gender" />
+          <Column field="country" header="Country" />
+          <Column field="postcode" header="Postcode" />
+          <Column field="role" header="Role" />
+          <Column field="subscribe" header="Subscribed" />
+          <Column header="Actions">
+            <template #body="slotProps">
+              <button @click="removeUser(slotProps.data)" class="remove-btn">Remove</button>
+            </template>
+          </Column>
+        </DataTable>
+      </div>
+    </div>
   </div>
 </template>
 

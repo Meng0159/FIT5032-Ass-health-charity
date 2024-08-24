@@ -2,9 +2,10 @@
 <template>
   <div class="login-page container py-5">
     <div class="col-auto">
-      <a class="navbar-brand" href="/" style="padding-left: 15px">
+      <router-link to="/" class="navbar-brand" style="padding-left: 15px">
         <img src="@/assets/images/logo.png" alt="Logo" height="40" />
-      </a>
+        <h4 style="margin-left: 10px; margin-bottom: 0">Back to Home</h4>
+      </router-link>
     </div>
     <h2 class="text-center mb-4">Login</h2>
     <form @submit.prevent="handleLogin" class="mx-auto" style="max-width: 400px">
@@ -84,7 +85,7 @@ const handleLogin = () => {
     )
 
     if (manager) {
-      alert('Login successful!')
+      alert('Login Manager successful!')
       // Store manager login state in localStorage
       localStorage.setItem('manager', JSON.stringify({ loggedIn: true }))
       router.push('/manager') // Navigate to the manager page
@@ -93,13 +94,24 @@ const handleLogin = () => {
 
     // If not a manager, check the local storage for user data
     const users = JSON.parse(localStorage.getItem('users')) || []
-    const user = users.find(
-      (user) => user.email === formData.email && user.password === formData.password
-    )
+    const userByEmail = users.find((user) => user.email === formData.email)
 
-    if (user) {
-      alert('Login successful!')
-      router.push('/user-dashboard') // Navigate to the user dashboard page or any other user-specific page
+    if (userByEmail) {
+      if (userByEmail.password === formData.password) {
+        alert('Login successful!')
+        localStorage.setItem(
+          'currentUser',
+          JSON.stringify({
+            email: formData.email,
+            psd: formData.password,
+            role: formData.role,
+            loggedIn: true
+          })
+        )
+        router.push('/') // Navigate to the user dashboard page or any other user-specific page
+      } else {
+        alert('Incorrect password. Forgot your password?')
+      }
     } else {
       alert('Invalid email or password.')
     }
