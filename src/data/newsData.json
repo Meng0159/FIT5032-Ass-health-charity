@@ -1,16 +1,18 @@
 [
   {
-    "title": "Latest Research on Mental Health",
+    "title": "Learn about Mental Health",
     "Category": "Journal",
-    "resource": "Health Journal",
-    "Keywords": "Research, Mental Health",
-    "link": "https://healthjournal.com/research-mental-health"
+    "resource": "Beyond Blue",
+    "Keywords": "Research, Anxiety, Depression",
+    "summary": "Beyond Blue is a mental health organization that provides information on mental health conditions, research, and resources. Learn more about anxiety and depression.",
+    "link": "https://www.beyondblue.org.au/mental-health/anxiety"
   },
   {
     "title": "Childhood Inflammation Linked to Later Mental Health Risks",
     "Category": "News",
     "resource": "Neuroscience News",
     "Keywords": "Childhood, Neuroscience, Psychology",
+    "summary": "A new study finds that childhood inflammation is linked to later mental health risks. The findings suggest that early-life inflammation may be a risk factor for mental health problems later in life.",
     "link": "https://neurosciencenews.com/childhood-inflammation-mental-health-27566/"
   },
   {
@@ -18,6 +20,7 @@
     "Category": "Magazine",
     "resource": "Mind Matters",
     "Keywords": "Coping, Strategies, Mental Health",
+    "summary": "Learn about coping strategies for managing stress, anxiety, and other mental health issues. Find out how to develop healthy coping mechanisms and improve your mental well-being.",
     "link": "https://mindmatters.com/coping-strategies"
   },
   {
@@ -25,6 +28,7 @@
     "Category": "Therapy",
     "resource": "Therapist Weekly",
     "Keywords": "Therapy, Techniques, Advancements",
+    "summary": "Discover the latest advancements in therapy techniques and approaches. Learn about new methods and tools that therapists are using to help clients improve their mental health.",
     "link": "https://therapistweekly.com/therapy-advancements"
   }
 ]

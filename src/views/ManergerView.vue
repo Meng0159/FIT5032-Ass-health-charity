@@ -45,34 +45,58 @@
         aria-labelledby="donations-tab"
       >
         <p>Below is the list of donations:</p>
-        <DataTable :value="donationData" responsiveLayout="scroll">
-          <Column field="name" header="Name" />
-          <Column field="email" header="Email" />
-          <Column field="phone" header="Phone Number" />
-          <Column field="amount" header="Amount" />
-          <Column field="message" header="Message" />
-          <Column field="rating" header="Review Rate" />
-          <Column header="Actions">
+
+        <div class="filter-section">
+          <label for="donationFilter" class="col-auto">Filter Donations:</label>
+          <select v-model="donationFilter" id="donationFilter" class="col-auto filter-dropdown">
+            <option value="">All Donations</option>
+            <option value="individual">Individual</option>
+            <option value="organisation">Organisation</option>
+          </select>
+        </div>
+
+        <DataTable
+          v-model:selection="selectedDonation"
+          :value="filteredDonations"
+          responsiveLayout="scroll"
+          selectionMode="single"
+          dataKey="id"
+        >
+          <Column selectionMode="single" headerStyle="width: 3rem"></Column>
+          <template v-for="field in donationFields" :key="field">
+            <Column :field="field" :header="getHeader(field)" />
+          </template>
+          <Column field="rating" header="Review Rate">
             <template #body="slotProps">
-              <button @click="deleteDonation(slotProps.data)" class="remove-btn">Remove</button>
-            </template>
-          </Column>
+              <Rating :modelValue="slotProps.data.rating" readonly /> </template
+          ></Column>
         </DataTable>
+        <button @click="removeDonation()" class="remove-btn mt-3">Remove Selected Donation</button>
       </div>
 
       <!-- Registered Users Table -->
       <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
         <p>Below is the list of registered users:</p>
-        <DataTable :value="users" responsiveLayout="scroll">
-          <Column field="fullName" header="Full Name" />
-          <Column field="email" header="Email" />
-          <Column field="phoneNumber" header="Phone Number" />
-          <Column field="dob" header="Date of Birth" />
-          <Column field="gender" header="Gender" />
-          <Column field="country" header="Country" />
-          <Column field="postcode" header="Postcode" />
-          <Column field="role" header="Role" />
-          <Column field="subscribe" header="Subscribed" />
+        <DataTable
+          v-model:selection="selectedUser"
+          :value="users"
+          responsiveLayout="scroll"
+          showGridlines
+          paginator
+          :rows="5"
+          :rowsPerPageOptions="[5, 10, 20, 50]"
+          dataKey="id"
+          tableStyle="min-width: 50rem"
+        >
+          <template v-for="field in userFields" :key="field">
+            <Column :field="field" :header="getHeader(field)" />
+          </template>
+          <Column field="subscribe" header="Subscribed">
+            <template #body="slotProps">
+              <i v-if="slotProps.data.subscribe" class="pi pi-check" style="color: green"></i>
+              <span v-else>-</span>
+            </template>
+          </Column>
           <Column header="Actions">
             <template #body="slotProps">
               <button @click="removeUser(slotProps.data)" class="remove-btn">Remove</button>
@@ -85,14 +109,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+import Rating from 'primevue/rating'
+
+// import ColumnGroup from 'primevue/columngroup' // optional
+// import Row from 'primevue/row'
 
 const users = ref([])
+const userFields = ['fullName', 'email', 'phoneNumber', 'dob', 'gender', 'role', 'postcode']
+const donationFields = ['role', 'name', 'date', 'email', 'phone', 'amount', 'city']
+const getHeader = (field) => {
+  // Convert camelCase to Title Case
+  return field
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, (str) => str.toUpperCase())
+    .trim()
+}
 
 onMounted(() => {
   users.value = JSON.parse(localStorage.getItem('users')) || []
+  donationData.value = JSON.parse(localStorage.getItem('donations')) || []
 })
 
 const removeUser = (user) => {
@@ -103,72 +141,116 @@ const removeUser = (user) => {
   }
 }
 const donationData = ref([])
+const donationFilter = ref('')
+const selectedDonation = ref(null)
 
-onMounted(() => {
-  donationData.value = JSON.parse(localStorage.getItem('donations')) || []
+// Computed property to filter donations based on selected filter
+const filteredDonations = computed(() => {
+  if (!donationFilter.value) {
+    return donationData.value // Show all donations if no filter is selected
+  }
+  return donationData.value.filter((donation) => donation.role === donationFilter.value)
 })
-const deleteDonation = (donation) => {
-  const index = donationData.value.indexOf(donation)
-  if (index !== -1) {
-    donationData.value.splice(index, 1)
-    localStorage.setItem('donations', JSON.stringify(donationData.value))
+
+// Function to remove selected donation
+const removeDonation = () => {
+  if (selectedDonation.value) {
+    const index = donationData.value.indexOf(selectedDonation.value)
+    if (index !== -1) {
+      donationData.value.splice(index, 1)
+      localStorage.setItem('donations', JSON.stringify(donationData.value))
+      selectedDonation.value = null // Clear selection after removal
+    }
+  } else {
+    alert('Please select a donation to remove.')
   }
 }
 </script>
 
 <style scoped>
 .manager-container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
 }
 
-.logout-btn {
-  color: #fff;
-  background-color: #7d2c06;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-decoration: none;
-}
-
-.logout-btn:hover {
-  background-color: #de5a67;
-}
-
-p {
+h2 {
+  color: #333;
   margin-bottom: 20px;
 }
 
-.p-datatable {
-  font-size: 20px;
+.logout-btn {
+  padding: 8px 16px;
+  background-color: #923c22;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
-.p-datatable .p-datatable-header {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
+.logout-btn:hover {
+  background-color: #d3372fcf;
 }
 
-.p-datatable .p-datatable-thead > tr > th {
-  border: none;
+.nav-tabs {
+  margin-bottom: 20px;
+}
+
+.nav-link {
+  color: #555;
+}
+
+.nav-link.active {
   font-weight: bold;
+}
+
+.tab-content {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.filter-dropdown {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+:deep(.p-datatable .p-datatable-tbody > tr > td) {
   text-align: left;
-  padding: 0.5rem;
+  padding-left: 0.5rem;
+  vertical-align: middle;
 }
 
-.p-datatable .p-datatable-tbody > tr > td {
+.remove-btn {
+  background-color: #b952df;
+  color: white;
   border: none;
-  padding: 0.5rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.p-datatable .p-datatable-tbody > tr:nth-child(odd) {
-  background-color: #f8f9fa;
+.remove-btn:hover {
+  background-color: #cdb6e5;
 }
 
-.p-datatable .p-datatable-tbody > tr:hover {
-  background-color: #e9ecef;
-}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .manager-container {
+    padding: 10px;
+  }
 
-.p-datatable .p-paginator {
-  margin-top: 20px;
-}
+  .nav-tabs {
+    flex-wrap: wrap;
+  }
 
-/* Add any necessary styles here */
+  .nav-item {
+    flex: 0 0 100%;
+    margin-bottom: 10px;
+  }
+}
 </style>

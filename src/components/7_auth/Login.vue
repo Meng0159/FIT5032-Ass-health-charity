@@ -1,12 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="login-page container py-5">
-    <div class="col-auto">
-      <router-link to="/" class="navbar-brand" style="padding-left: 15px">
-        <img src="@/assets/images/logo.png" alt="Logo" height="40" />
-        <h4 style="margin-left: 10px; margin-bottom: 0">Back to Home</h4>
-      </router-link>
-    </div>
     <h2 class="text-center mb-4">Login</h2>
     <form @submit.prevent="handleLogin" class="mx-auto" style="max-width: 400px">
       <div class="form-group mb-3">

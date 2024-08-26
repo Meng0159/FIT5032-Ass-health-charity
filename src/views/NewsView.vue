@@ -18,7 +18,7 @@
 
 <script>
 import AppHeader from '@/components/0_common/AppHeader.vue'
-import LatestNews from '@/components/3_news/LatestNews.vue'
+import LatestNews from '@/components/3_news/NewsCards.vue'
 // import EventsTable from '@/components/3_news/EventsTable.vue'
 
 export default {

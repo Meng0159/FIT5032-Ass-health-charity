@@ -65,6 +65,8 @@ export default {
       links: [
         { text: 'About', href: '/about' },
         { text: 'News', href: '/news' },
+        // { text: 'Services', href: '/services' },
+        { text: 'Research', href: '/research-support' },
         { text: 'Donate', href: '/donate' }
 
         // Add other links as needed

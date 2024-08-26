@@ -10,7 +10,7 @@
             to="/"
             style="display: flex; align-items: center; padding-left: 15px"
           >
-            <img src="@/assets/images/logo.png" alt="Logo" height="40" />
+            <img src="@/assets/images/brain-flower.jpeg" alt="Logo" height="40" />
             <h4 style="margin-left: 10px; margin-bottom: 0">MindSupport</h4>
           </router-link>
         </div>

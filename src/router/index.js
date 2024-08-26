@@ -6,6 +6,7 @@ import DonateView from '@/views/DonateView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import ManergerView from '../views/ManergerView.vue'
+import ResearchSupportView from '@/views/ResearchSupportView.vue'
 
 // Helper function to check if the user is authenticated
 function isAuthenticated() {
@@ -44,7 +45,12 @@ const router = createRouter({
     {
       path: '/news',
       name: 'news',
-      component: NewsView,
+      component: NewsView
+    },
+    {
+      path: '/research-support',
+      name: 'research-support',
+      component: ResearchSupportView,
       beforeEnter: userAuthenticated
     },
     {

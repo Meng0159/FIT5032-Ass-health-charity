@@ -364,7 +364,9 @@ const submitDonation = () => {
       phone: donationFields.value.phone,
       city: donationFields.value.city,
       state: donationFields.value.state,
-      rating: donationFields.value.rating
+      rating: donationFields.value.rating,
+      role: formType.value,
+      date: new Date().toLocaleDateString()
     }
 
     let donations = JSON.parse(localStorage.getItem('donations')) || []

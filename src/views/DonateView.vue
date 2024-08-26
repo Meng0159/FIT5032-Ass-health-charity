@@ -29,30 +29,37 @@
 
     <div class="donation-tabs mt-5">
       <ul class="nav nav-tabs" id="donationTab" role="tablist">
+        <!-- Tab for Individual Donation -->
         <li class="nav-item" role="presentation">
           <button
-            class="nav-link active"
+            class="nav-link"
+            :class="{ active: isIndividualSelected }"
             id="individual-tab"
             data-bs-toggle="tab"
             data-bs-target="#individual"
             type="button"
             role="tab"
             aria-controls="individual"
-            aria-selected="true"
+            aria-selected="isIndividualSelected"
+            @click="isIndividualSelected = true"
           >
             Individual Donation
           </button>
         </li>
+
+        <!-- Tab for Organisation Donation -->
         <li class="nav-item" role="presentation">
           <button
             class="nav-link"
+            :class="{ active: !isIndividualSelected }"
             id="organisation-tab"
             data-bs-toggle="tab"
             data-bs-target="#organisation"
             type="button"
             role="tab"
             aria-controls="organisation"
-            aria-selected="false"
+            aria-selected="!isIndividualSelected"
+            @click="isIndividualSelected = false"
           >
             Organisation Donation
           </button>
@@ -62,6 +69,7 @@
       <div class="tab-content mt-4" id="donationTabContent">
         <!-- Individual Donation Form -->
         <div
+          v-if="isIndividualSelected"
           class="tab-pane fade show active"
           id="individual"
           role="tabpanel"
@@ -75,14 +83,15 @@
           <DonateForm :formType="'individual'" />
         </div>
 
-        <!-- organisation Donation Form -->
+        <!-- Organisation Donation Form -->
         <div
-          class="tab-pane fade"
+          v-else
+          class="tab-pane fade show active"
           id="organisation"
           role="tabpanel"
           aria-labelledby="organisation-tab"
         >
-          <h3>Donate as an organisation</h3>
+          <h3>Donate as an Organisation</h3>
           <p>
             Support us as an organisation and help us expand our reach. Your partnership can enable
             us to touch more lives and make a broader impact.
@@ -104,6 +113,11 @@ export default {
   components: {
     AppHeader,
     DonateForm
+  },
+  data() {
+    return {
+      isIndividualSelected: true
+    }
   },
   setup() {
     const donationData = ref([])
