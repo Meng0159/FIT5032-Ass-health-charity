@@ -7,6 +7,7 @@ import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import ManergerView from '../views/ManergerView.vue'
 import ResearchSupportView from '@/views/ResearchSupportView.vue'
+import ErrorPage from '@/components/8_security/ErrorDisplay.vue'
 
 // Helper function to check if the user is authenticated
 function isAuthenticated() {
@@ -84,6 +85,11 @@ const router = createRouter({
           next('/login')
         }
       }
+    },
+    {
+      path: '/errorPage',
+      name: 'errorPage',
+      component: ErrorPage
     }
   ]
 })

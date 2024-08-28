@@ -167,6 +167,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import DOMPurify from 'dompurify'
+import bcrypt from 'bcryptjs'
 
 const formData = ref({
   fullName: '',
@@ -255,8 +257,23 @@ const clearForm = () => {
 const generateUserId = () => {
   return '_' + Math.random().toString(36).substr(2, 9)
 }
+
+const sanitizeInput = (input) => {
+  const sanitized = DOMPurify.sanitize(input)
+  console.log('Sanitized Input:', sanitized) // Debugging line
+  return sanitized
+}
+
 const router = useRouter()
+
 const handleSubmit = () => {
+  const sanitizedFullName = sanitizeInput(formData.value.fullName)
+  const sanitizedEmail = sanitizeInput(formData.value.email)
+  const sanitizedPassword = sanitizeInput(formData.value.password)
+
+  const salt = bcrypt.genSaltSync(10)
+  const hashedPassword = bcrypt.hashSync(sanitizedPassword, salt)
+
   validateEmail()
   validatePassword(true)
   validatePhoneNumber(true)
@@ -265,17 +282,18 @@ const handleSubmit = () => {
   if (!hasErrors) {
     const newUser = {
       id: generateUserId(),
-      fullName: formData.value.fullName,
-      email: formData.value.email,
+      fullName: sanitizedFullName,
+      email: sanitizedEmail,
       phoneNumber: formData.value.phoneNumber,
       dob: formData.value.dob,
       gender: formData.value.gender,
       country: formData.value.country,
       postcode: formData.value.postcode,
       role: formData.value.role,
-      password: formData.value.password,
+      password: hashedPassword,
       subscribe: formData.value.subscribe
     }
+
     // Retrieve existing users from local storage
     let users = JSON.parse(localStorage.getItem('users')) || []
 

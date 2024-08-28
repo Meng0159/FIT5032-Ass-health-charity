@@ -12,7 +12,7 @@
           class="form-control"
           :class="{ 'is-invalid': errors.email }"
           placeholder="Enter your email"
-          required
+          @blur="validateEmail"
         />
         <div v-if="errors.email" class="invalid-feedback">{{ errors.email }}</div>
       </div>
@@ -42,6 +42,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import DOMPurify from 'dompurify'
 import managers from '@/data/managers.json'
 
 const formData = reactive({
@@ -56,17 +57,36 @@ const errors = reactive({
 
 const router = useRouter()
 
+const sanitizeInput = (input) => {
+  const sanitized = DOMPurify.sanitize(input)
+  console.log('Sanitized Input:', sanitized) // Debugging line
+  return sanitized
+}
+
+// Validate email address
 const validateEmail = () => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-  if (!emailPattern.test(formData.email)) {
+  const vulunerablePattern = /<script>.*<\/script>/g
+  const sanitizedEmail = sanitizeInput(formData.email)
+  if (!emailPattern.test(sanitizedEmail)) {
     errors.email = 'Please enter a valid email address.'
   } else {
     errors.email = null
+  }
+
+  // Check for potential XSS attack
+  if (vulunerablePattern.test(formData.email.toLowerCase())) {
+    errors.email = 'Malicious code detected!'
+    alert('Malicious code detected!') // Alert the user
+    router.push('/errorPage')
   }
 }
 
 const handleLogin = () => {
   validateEmail()
+  const sanitizedEmail = sanitizeInput(formData.email)
+  const sanitizedPassword = sanitizeInput(formData.password)
+
   if (!errors.email && !errors.password) {
     // Check if the user is a manager
     // if (formData.email === 'admin@health.com' && formData.password === 'admin') {
@@ -75,7 +95,7 @@ const handleLogin = () => {
     //   errorMessage.value = 'Invalid email or password.'
     // }
     const manager = managers.find(
-      (manager) => manager.email === formData.email && manager.password === formData.password
+      (manager) => manager.email === sanitizedEmail && manager.password === sanitizedPassword
     )
 
     if (manager) {

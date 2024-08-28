@@ -58,11 +58,11 @@
         <DataTable
           v-model:selection="selectedDonation"
           :value="filteredDonations"
-          responsiveLayout="scroll"
           selectionMode="single"
+          responsiveLayout="scroll"
           dataKey="id"
         >
-          <Column selectionMode="single" headerStyle="width: 3rem"></Column>
+          <!-- <Column selectionMode="single" headerStyle="width: 3rem"></Column> -->
           <template v-for="field in donationFields" :key="field">
             <Column :field="field" :header="getHeader(field)" />
           </template>
@@ -71,7 +71,25 @@
               <Rating :modelValue="slotProps.data.rating" readonly /> </template
           ></Column>
         </DataTable>
-        <button @click="removeDonation()" class="remove-btn mt-3">Remove Selected Donation</button>
+        <div class="d-flex justify-content-between">
+          <button @click="removeDonation()" class="col-3 remove-btn mt-3">
+            Remove Selected Donation
+          </button>
+          <div class="rating col-auto d-flex justify-content-between" v-if="averageRating !== null">
+            <span>Overall donationers experience rating:</span>
+            <div class="stars">
+              <span
+                v-for="i in 5"
+                :key="i"
+                class="star"
+                :class="{ filled: i <= Math.round(averageRating) }"
+              >
+                ★
+              </span>
+            </div>
+            <span class="rating-value">({{ averageRating.toFixed(1) }})</span>
+          </div>
+        </div>
       </div>
 
       <!-- Registered Users Table -->
@@ -111,6 +129,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import DataTable from 'primevue/datatable'
+
 import Column from 'primevue/column'
 import Rating from 'primevue/rating'
 
@@ -150,6 +169,12 @@ const filteredDonations = computed(() => {
     return donationData.value // Show all donations if no filter is selected
   }
   return donationData.value.filter((donation) => donation.role === donationFilter.value)
+})
+
+const averageRating = computed(() => {
+  if (donationData.value.length === 0) return null
+  const sum = donationData.value.reduce((acc, donation) => acc + parseInt(donation.rating), 0)
+  return sum / donationData.value.length
 })
 
 // Function to remove selected donation
