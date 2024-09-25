@@ -74,12 +74,12 @@ const router = createRouter({
       name: 'manager',
       component: ManergerView,
       // ensures that only one-time logged-in managers can access the route.
-      // once a manager logged in, remove the check that make sure they have to login again to access the route.
+      // updated with manager's firebase authentication
       beforeEnter: (to, from, next) => {
-        const manager = JSON.parse(localStorage.getItem('manager'))
-        if (manager && manager.loggedIn) {
+        const manager = JSON.parse(localStorage.getItem('currentUser'))
+        if (manager && manager.isManager) {
           next()
-          localStorage.removeItem('manager')
+          localStorage.removeItem('currentUser')
         } else {
           alert('Please log in.')
           next('/login')

@@ -55,6 +55,7 @@
               v-model="formData.dob"
               class="form-control"
               :class="{ 'is-invalid': errors.dob }"
+              @blur="validateBirthDate"
             />
             <div v-if="errors.dob" class="invalid-feedback">{{ errors.dob }}</div>
           </div>
@@ -129,6 +130,7 @@
             @input="() => validatePassword(false)"
             v-model="formData.password"
           />
+
           <div class="text-danger" v-if="errors.password">{{ errors.password }}</div>
         </div>
 
@@ -144,7 +146,9 @@
           <div class="text-danger" v-if="errors.confirmPassword">{{ errors.confirmPassword }}</div>
         </div>
       </div>
-
+      <div class="text-muted">
+        At least 8 characters long and contain at least one number, and one special character.
+      </div>
       <div class="form-group mb-3 form-check">
         <input
           type="checkbox"
@@ -169,6 +173,11 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import DOMPurify from 'dompurify'
 import bcrypt from 'bcryptjs'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+// import { getFirestore, doc, setDoc } from 'firebase/firestore'
+import db from '../4_firebase/init.js'
+// eslint-disable-next-line no-unused-vars
+import { doc, collection, setDoc } from 'firebase/firestore'
 
 const formData = ref({
   fullName: '',
@@ -223,6 +232,21 @@ const validatePassword = () => {
   }
 }
 
+const validateBirthDate = () => {
+  if (formData.value.dob === '') {
+    errors.value.dob = 'Please enter your date of birth.'
+  } else {
+    const selectedDate = new Date(formData.value.dob)
+    const currentDate = new Date()
+
+    if (selectedDate > currentDate) {
+      errors.value.dob = 'Date of birth cannot be in the future.'
+    } else {
+      errors.value.dob = null
+    }
+  }
+}
+
 const validateConfirmPassword = (blur) => {
   if (formData.value.password !== formData.value.confirmPassword) {
     if (blur) errors.value.confirmPassword = 'Passwords do not match.'
@@ -254,19 +278,26 @@ const clearForm = () => {
     subscribe: false
   }
 }
-const generateUserId = () => {
-  return '_' + Math.random().toString(36).substr(2, 9)
-}
 
 const sanitizeInput = (input) => {
   const sanitized = DOMPurify.sanitize(input)
   console.log('Sanitized Input:', sanitized) // Debugging line
   return sanitized
 }
-
 const router = useRouter()
+const auth = getAuth()
 
-const handleSubmit = () => {
+// Handle form submission and store data in Firebase Auth and Firestore
+const handleSubmit = async () => {
+  validateEmail()
+  validateBirthDate()
+  validatePassword(true)
+  // validateConfirmPassword()
+  validatePhoneNumber(true)
+
+  const hasErrors = Object.values(errors.value).some((error) => error !== null)
+  if (hasErrors) return
+
   const sanitizedFullName = sanitizeInput(formData.value.fullName)
   const sanitizedEmail = sanitizeInput(formData.value.email)
   const sanitizedPassword = sanitizeInput(formData.value.password)
@@ -274,14 +305,17 @@ const handleSubmit = () => {
   const salt = bcrypt.genSaltSync(10)
   const hashedPassword = bcrypt.hashSync(sanitizedPassword, salt)
 
-  validateEmail()
-  validatePassword(true)
-  validatePhoneNumber(true)
-  // Add validation for other fields as needed
-  const hasErrors = Object.values(errors.value).some((error) => error !== null)
-  if (!hasErrors) {
-    const newUser = {
-      id: generateUserId(),
+  try {
+    // Create user in Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      sanitizedEmail,
+      hashedPassword
+    )
+    const user = userCredential.user
+
+    // Store additional user information in Firestore
+    await setDoc(doc(db, 'users', user.uid), {
       fullName: sanitizedFullName,
       email: sanitizedEmail,
       phoneNumber: formData.value.phoneNumber,
@@ -290,25 +324,16 @@ const handleSubmit = () => {
       country: formData.value.country,
       postcode: formData.value.postcode,
       role: formData.value.role,
-      password: hashedPassword,
+      isManager: false,
       subscribe: formData.value.subscribe
-    }
-
-    // Retrieve existing users from local storage
-    let users = JSON.parse(localStorage.getItem('users')) || []
-
-    // Add the new user to the array
-    users.push(newUser)
-
-    // Save the updated users array back to local storage
-    localStorage.setItem('users', JSON.stringify(users))
+    })
 
     alert('Registration successful!')
-    // Clear the form or navigate away after registration
     clearForm()
-
-    router.push('/login') // Redirect to home page after registration
-    // console.log(users)
+    router.push('/login') // Redirect to login after successful registration
+  } catch (error) {
+    console.error('Error creating user:', error)
+    alert('Failed to register. Please try again.')
   }
 }
 </script>

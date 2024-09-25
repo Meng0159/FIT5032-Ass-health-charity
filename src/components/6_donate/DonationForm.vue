@@ -166,13 +166,7 @@
         </div>
         <div class="col-md-4 mb-3">
           <label for="city" class="form-label">City:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="city"
-            v-model="donationFields.city"
-            required
-          />
+          <input type="text" class="form-control" id="city" v-model="donationFields.city" />
         </div>
         <div class="col-md-4 mb-3">
           <label for="state" class="form-label">State:</label>
@@ -355,6 +349,7 @@ const submitDonation = () => {
     !errors.value.postCode
   ) {
     const donationData = {
+      // id: Math.floor(Math.random() * 1000),
       amount: donationFields.value.customAmount || donationFields.value.amount,
       name:
         formType.value === 'individual'

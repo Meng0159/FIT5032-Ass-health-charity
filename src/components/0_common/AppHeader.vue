@@ -20,7 +20,6 @@
           <Navbar />
         </div>
 
-        <!-- Login/Sign Up buttons on the right -->
         <!-- Conditional display of Login/Sign Up or Logout button -->
         <div class="col-auto d-none d-lg-flex">
           <router-link v-if="!isAuthenticated" class="btn btn-outline-light mx-2" to="/login">

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import PublishForm from '@/components/5_researchSpt/PublishForm.vue'
+import PublishForm from '@/components/5_researchService/PublishForm.vue'
 
 export default {
   name: 'ResearchSupportView',

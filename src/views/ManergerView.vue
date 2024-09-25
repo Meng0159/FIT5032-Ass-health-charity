@@ -60,13 +60,22 @@
           :value="filteredDonations"
           selectionMode="single"
           responsiveLayout="scroll"
-          dataKey="id"
+          :rowClass="selectRow"
         >
-          <!-- <Column selectionMode="single" headerStyle="width: 3rem"></Column> -->
+          <Column selectionMode="single" headerStyle="width: 3rem">
+            <!-- <template #body="slotProps">
+              <RadioButton
+                v-model:checked="selectedDonation"
+                :value="slotProps.data"
+                name="donationSelection"
+                @click.stop="selectRow(slotProps.data)"
+              />
+            </template> -->
+          </Column>
           <template v-for="field in donationFields" :key="field">
             <Column :field="field" :header="getHeader(field)" />
           </template>
-          <Column field="rating" header="Review Rate">
+          <Column field="donate-rating" header="Review Rate">
             <template #body="slotProps">
               <Rating :modelValue="slotProps.data.rating" readonly /> </template
           ></Column>
@@ -129,7 +138,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import DataTable from 'primevue/datatable'
-
+// import RadioButton from 'primevue/radiobutton'
 import Column from 'primevue/column'
 import Rating from 'primevue/rating'
 
@@ -160,8 +169,19 @@ const removeUser = (user) => {
   }
 }
 const donationData = ref([])
+// const donationDataTest = ref([
+//   { id: 1, name: 'Donation 1', amount: 100 },
+//   { id: 2, name: 'Donation 2', amount: 200 }
+// ])
+// const filteredDonationstest = computed(() => donationDataTest.value)
+
 const donationFilter = ref('')
 const selectedDonation = ref(null)
+
+// Method to handle row selection
+function selectRow(rowData) {
+  return rowData === selectedDonation.value ? 'selected-row' : ''
+}
 
 // Computed property to filter donations based on selected filter
 const filteredDonations = computed(() => {
@@ -194,7 +214,6 @@ const removeDonation = () => {
 
 <style scoped>
 .manager-container {
-  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -243,14 +262,45 @@ h2 {
   margin-bottom: 15px;
 }
 
+/* Ensure DataTable occupies full width and has proper border and spacing */
+:deep(.p-datatable) {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Styling for table cells and headers */
 :deep(.p-datatable .p-datatable-tbody > tr > td) {
   text-align: left;
-  padding-left: 0.5rem;
+  padding: 0.5rem;
   vertical-align: middle;
 }
 
+:deep(.p-datatable .p-datatable-thead > tr > th) {
+  background-color: #f1f1f1;
+  border-bottom: 2px solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+/* More specific CSS selector to target the DataTable rows */
+.p-datatable .p-datatable-tbody > tr.selected-row {
+  background-color: #e0f7fa !important; /* Light cyan background */
+  color: #006064 !important; /* Dark cyan text color */
+}
+
+/* Ensuring the row is highlighted even when focused */
+.p-datatable .p-datatable-tbody > tr.selected-row:focus {
+  background-color: #b2ebf2 !important; /* Slightly darker cyan */
+}
+/* Radio button styles */
+
+.p-radiobutton-icon {
+  border: 2px solid #333;
+  visibility: visible;
+}
+
 .remove-btn {
-  background-color: #b952df;
+  background-color: #df52a2;
   color: white;
   border: none;
   padding: 6px 12px;
