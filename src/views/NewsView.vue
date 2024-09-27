@@ -10,7 +10,7 @@
       <!-- Events Table Section -->
       <div class="mt-5">
         <h2 class="mb-3">Upcoming Events</h2>
-        <!-- <EventsTable /> -->
+        <EventsCalender />
       </div>
     </div>
   </div>
@@ -19,14 +19,14 @@
 <script>
 import AppHeader from '@/components/0_common/AppHeader.vue'
 import LatestNews from '@/components/3_news/NewsCards.vue'
-// import EventsTable from '@/components/3_news/EventsTable.vue'
+import EventsCalender from '@/components/3_news/EventsCalender.vue'
 
 export default {
   name: 'NewsView',
   components: {
     AppHeader,
-    LatestNews
-    // EventsTable
+    LatestNews,
+    EventsCalender
   }
 }
 </script>

@@ -57,6 +57,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { getFirestore, collection, addDoc } from 'firebase/firestore'
+
+const db = getFirestore()
 
 const formData = ref({
   name: '',
@@ -67,19 +70,30 @@ const formData = ref({
   content: ''
 })
 
-const handleSubmit = () => {
-  const publications = JSON.parse(localStorage.getItem('publications')) || []
-  const newPublication = { ...formData.value, id: Date.now() }
-  publications.push(newPublication)
-  localStorage.setItem('publications', JSON.stringify(publications))
-  alert('Publication submitted successfully!')
-  formData.value = {
-    name: '',
-    institute: '',
-    topic: '',
-    field: '',
-    keywords: '',
-    content: ''
+const handleSubmit = async () => {
+  const newPublication = {
+    ...formData.value,
+    id: Date.now(),
+    date: new Date().toLocaleDateString()
+  }
+
+  try {
+    // Add the publication data to Firestore
+    await addDoc(collection(db, 'publications'), newPublication)
+    alert('Publication submitted successfully!')
+
+    // Reset the form
+    formData.value = {
+      name: '',
+      institute: '',
+      topic: '',
+      field: '',
+      keywords: '',
+      content: ''
+    }
+  } catch (error) {
+    console.error('Error saving publication: ', error)
+    alert('There was an error submitting your publication. Please try again.')
   }
 }
 </script>

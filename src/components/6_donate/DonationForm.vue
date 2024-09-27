@@ -171,12 +171,12 @@
         <div class="col-md-4 mb-3">
           <label for="state" class="form-label">State:</label>
           <select class="form-select" id="state" v-model="donationFields.state" required>
-            <option value="state1">New South Wales</option>
-            <option value="state2">Victoria</option>
-            <option value="state3">Queensland</option>
-            <option value="state4">Western Australia</option>
-            <option value="state5">South Australia</option>
-            <option value="state6">Tasmania</option>
+            <option value="NSW">New South Wales</option>
+            <option value="VIC">Victoria</option>
+            <option value="QSL">Queensland</option>
+            <option value="WA">Western Australia</option>
+            <option value="SA">South Australia</option>
+            <option value="TAS">Tasmania</option>
           </select>
         </div>
       </div>
@@ -264,7 +264,7 @@
 <script setup>
 import { ref } from 'vue'
 import { getFirestore, collection, addDoc } from 'firebase/firestore'
-import axios from 'axios'
+// import axios from 'axios'
 
 const db = getFirestore()
 
@@ -372,14 +372,13 @@ const submitDonation = async () => {
       await addDoc(collection(db, 'donations'), donationData)
 
       // Trigger Cloud Function to send the invoice email
-      await axios.post('https://YOUR_CLOUD_FUNCTION_URL', {
-        email: donationData.email,
-        name: donationData.name,
-        donationAmount: donationData.amount
-      })
+      // await axios.post('https://YOUR_CLOUD_FUNCTION_URL', {
+      //   email: donationData.email,
+      //   name: donationData.name,
+      //   donationAmount: donationData.amount
+      // })
 
       alert('Thank you for your donation! Invoice has been sent to your email.')
-      resetForm()
       resetForm()
     } catch (error) {
       console.error('Error saving donation: ', error)

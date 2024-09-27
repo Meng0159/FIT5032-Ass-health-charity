@@ -12,7 +12,7 @@ import ErrorPage from '@/components/8_security/ErrorDisplay.vue'
 // Helper function to check if the user is authenticated
 function isAuthenticated() {
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
-  return currentUser && currentUser.userSession.isLoggedIn
+  return currentUser && currentUser.isLoggedIn
 }
 
 // Navigation guard to protect routes that require authentication
