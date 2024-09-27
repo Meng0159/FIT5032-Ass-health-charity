@@ -12,7 +12,7 @@ import ErrorPage from '@/components/8_security/ErrorDisplay.vue'
 // Helper function to check if the user is authenticated
 function isAuthenticated() {
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
-  return currentUser && currentUser.loggedIn
+  return currentUser && currentUser.userSession.isLoggedIn
 }
 
 // Navigation guard to protect routes that require authentication
@@ -93,11 +93,11 @@ const router = createRouter({
     }
   ]
 })
-// Global navigation guard for handling home page based on authentication
+// // Global navigation guard for handling home page based on authentication
 router.beforeEach((to, from, next) => {
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
 
-  if (to.name === 'home' && currentUser && currentUser.loggedIn) {
+  if (to.name === 'home' && currentUser && currentUser.isLoggedIn) {
     // Proceed to the home page with logout visible
     next()
     console.log('log in to home')

@@ -172,7 +172,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import DOMPurify from 'dompurify'
-import bcrypt from 'bcryptjs'
+// import bcrypt from 'bcryptjs'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 // import { getFirestore, doc, setDoc } from 'firebase/firestore'
 import db from '../4_firebase/init.js'
@@ -302,15 +302,12 @@ const handleSubmit = async () => {
   const sanitizedEmail = sanitizeInput(formData.value.email)
   const sanitizedPassword = sanitizeInput(formData.value.password)
 
-  const salt = bcrypt.genSaltSync(10)
-  const hashedPassword = bcrypt.hashSync(sanitizedPassword, salt)
-
   try {
     // Create user in Firebase Authentication
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       sanitizedEmail,
-      hashedPassword
+      sanitizedPassword
     )
     const user = userCredential.user
 
@@ -324,6 +321,7 @@ const handleSubmit = async () => {
       country: formData.value.country,
       postcode: formData.value.postcode,
       role: formData.value.role,
+      password: formData.value.password,
       isManager: false,
       subscribe: formData.value.subscribe
     })

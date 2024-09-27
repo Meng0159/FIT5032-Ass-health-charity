@@ -83,7 +83,7 @@
 
 <script setup>
 import Navbar from './Navbar.vue'
-import { ref, onMounted } from 'vue'
+import { ref, defineEmits, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const isAuthenticated = ref(false)
@@ -92,16 +92,19 @@ const router = useRouter()
 // Check if the user is authenticated by checking local storage
 onMounted(() => {
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
-  if (currentUser && currentUser.loggedIn) {
+  if (currentUser && currentUser.isLoggedIn) {
     isAuthenticated.value = true
   }
 })
 
+const emit = defineEmits(['authenticated'])
 // Logout function
 const logout = () => {
   localStorage.removeItem('currentUser')
-  isAuthenticated.value = false
+  // isAuthenticated.value = false
+  emit('authenticated', false)
   router.push('/') // Redirect to home page after logout
+  location.reload() // Reload the page to update the navbar
 }
 </script>
 

@@ -263,6 +263,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import { getFirestore, collection, addDoc } from 'firebase/firestore'
+import axios from 'axios'
+
+const db = getFirestore()
 
 const props = defineProps({
   formType: {
@@ -336,7 +340,7 @@ const validateAmount = () => {
   }
 }
 
-const submitDonation = () => {
+const submitDonation = async () => {
   validateAmount()
   validateEmail()
   validatePhoneNumber()
@@ -363,15 +367,24 @@ const submitDonation = () => {
       role: formType.value,
       date: new Date().toLocaleDateString()
     }
+    try {
+      // Add the donation data to Firestore
+      await addDoc(collection(db, 'donations'), donationData)
 
-    let donations = JSON.parse(localStorage.getItem('donations')) || []
+      // Trigger Cloud Function to send the invoice email
+      await axios.post('https://YOUR_CLOUD_FUNCTION_URL', {
+        email: donationData.email,
+        name: donationData.name,
+        donationAmount: donationData.amount
+      })
 
-    donations.push(donationData)
-
-    localStorage.setItem('donations', JSON.stringify(donations))
-
-    alert('Thank you for your donation!')
-    resetForm()
+      alert('Thank you for your donation! Invoice has been sent to your email.')
+      resetForm()
+      resetForm()
+    } catch (error) {
+      console.error('Error saving donation: ', error)
+      alert('There was an error processing your donation. Please try again.')
+    }
   }
 }
 
