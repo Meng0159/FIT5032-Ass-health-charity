@@ -1,20 +1,50 @@
 [
   {
     "name": "Mental Health Awareness Lecture",
-    "date": "2024-09-15",
+    "date": "2024-09-15T10:00:00",
     "location": "Melbourne Convention Centre",
     "host": "Mental Health Foundation"
   },
   {
     "name": "Networking for Mental Health Professionals",
-    "date": "2024-09-22",
+    "date": "2024-09-22T14:00:00",
     "location": "Sydney Conference Hall",
     "host": "Mental Health Network"
   },
   {
     "name": "Mindfulness Workshop",
-    "date": "2024-10-05",
+    "date": "2024-10-05T09:00:00",
     "location": "Brisbane Wellness Centre",
     "host": "Brisbane Wellness Group"
+  },
+  {
+    "name": "Stress Management Seminar",
+    "date": "2024-10-12T13:30:00",
+    "location": "Perth Community Center",
+    "host": "Western Australia Health Department"
+  },
+  {
+    "name": "Youth Mental Health Summit",
+    "date": "2024-10-20T11:00:00",
+    "location": "Adelaide University",
+    "host": "National Youth Mental Health Initiative"
+  },
+  {
+    "name": "Cognitive Behavioral Therapy Workshop",
+    "date": "2024-11-02T09:30:00",
+    "location": "Hobart Medical Center",
+    "host": "Tasmanian Psychological Society"
+  },
+  {
+    "name": "Mental Health in the Workplace Conference",
+    "date": "2024-11-15T08:00:00",
+    "location": "Canberra Business Hub",
+    "host": "Australian HR Institute"
+  },
+  {
+    "name": "Art Therapy for Mental Wellness Exhibition",
+    "date": "2024-11-28T18:00:00",
+    "location": "Gold Coast Art Gallery",
+    "host": "Creative Minds Collective"
   }
 ]

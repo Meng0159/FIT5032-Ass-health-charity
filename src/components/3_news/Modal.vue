@@ -33,7 +33,7 @@ export default {
 </script>
 
 <style>
-/* Modal styles */
+/* Style for the modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -44,27 +44,30 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1050; /* Make sure the modal is above the calendar */
+  z-index: 1000; /* Ensure the modal is above the calendar */
 }
 .modal-content {
-  background: #42c0dd;
+  background-color: #fff !important;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 8px !important;
   max-width: 500px;
   width: 100%;
-  z-index: 1100; /* Higher z-index to appear above other elements */
+  z-index: 1001; /* Ensure content is on top of the overlay */
 }
-.modal-header,
-.modal-footer {
+.modal-header {
   padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e4dbdb;
 }
+.modal-footer,
 .modal-body {
   margin-top: 10px;
 }
-
-/* Make sure calendar z-index is lower than modal */
-.fc {
-  z-index: 1000;
+.modal-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+.modal-footer button {
+  margin-left: 10px;
 }
 </style>
