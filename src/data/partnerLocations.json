@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Partner 1",
+    "postcode": "3000",
+    "location": [144.9631, -37.8136]
+  },
+  {
+    "name": "Partner 2",
+    "postcode": "2000",
+    "location": [151.2093, -33.8688]
+  }
+]

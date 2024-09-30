@@ -11,6 +11,8 @@ import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 // import 'node_modules/primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css' // PrimeIcons CSS
+//
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { initializeApp } from 'firebase/app'
 // Your web app's Firebase configuration

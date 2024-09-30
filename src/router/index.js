@@ -7,7 +7,9 @@ import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import ManergerView from '../views/ManergerView.vue'
 import ResearchSupportView from '@/views/ResearchSupportView.vue'
+
 import ErrorPage from '@/components/8_security/ErrorDisplay.vue'
+import PublishForm from '@/components/5_services/PublishForm.vue'
 
 // Helper function to check if the user is authenticated
 function isAuthenticated() {
@@ -51,8 +53,18 @@ const router = createRouter({
     {
       path: '/research-support',
       name: 'research-support',
-      component: ResearchSupportView,
+      component: ResearchSupportView
+    },
+    {
+      path: '/research-support/publish',
+      name: 'publish',
+      component: PublishForm,
       beforeEnter: userAuthenticated
+    },
+    {
+      path: '/research-support/partner',
+      name: 'partner',
+      component: () => import('@/views/ServicesPartnerView.vue')
     },
     {
       path: '/donate',

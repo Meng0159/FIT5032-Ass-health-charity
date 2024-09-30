@@ -1,53 +1,29 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<!-- <img src="@/assets/images/logo.png" alt="Logo" height="40" /> -->
-<!-- src/components/Navbar.vue -->
-<!-- <template>
-  <ul class="navbar-nav d-flex flex-row justify-content-center">
-    <li class="nav-item mx-2">
-      <a class="nav-link" href="/about">About</a>
-    </li>
-    <li class="nav-item mx-2">
-      <a class="nav-link" href="/news">News</a>
-    </li>
-    Uncomment other links as needed
-    <li class="nav-item mx-2">
-        <a class="nav-link" href="/news">News</a>
-      </li>
-      <li class="nav-item mx-2">
-        <a class="nav-link" href="/services">Services</a>
-      </li>
-      <li class="nav-item mx-2">
-        <a class="nav-link" href="/research-support">Research & Support</a>
-      </li>
-      <li class="nav-item mx-2">
-        <a class="nav-link" href="/donate">Donate</a>
-      </li>
-      <li class="nav-item mx-2">
-        <a class="nav-link" href="/account">My Account</a>
-      </li>
-  </ul>
-</template>
-
-<script>
-export default {}
-</script>
-
-<style scoped>
-.navbar-nav .nav-link {
-  color: rgb(88, 31, 31);
-  margin: 0 10px;
-}
-.navbar-nav .nav-link:hover {
-  color: #1e73c9;
-}
-</style> -->
 
 <template>
   <ul :class="['nav nav-pills nav-justified', isSidebarOpen ? 'flex-column' : 'd-flex flex-row']">
-    <li class="nav-item" v-for="link in links" :key="link.href">
-      <router-link class="nav-link" active-class="active" aria-current="page" :to="link.href">{{
-        link.text
-      }}</router-link>
+    <li v-for="link in links" :key="link.href" :class="['nav-item', { dropdown: link.dropdown }]">
+      <template v-if="!link.dropdown">
+        <router-link class="nav-link" active-class="active" aria-current="page" :to="link.href">
+          {{ link.text }}
+        </router-link>
+      </template>
+      <template v-else>
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ link.text }}
+        </a>
+        <ul class="dropdown-menu">
+          <li v-for="subLink in link.sublinks" :key="subLink.href">
+            <router-link class="dropdown-item" :to="subLink.href">{{ subLink.text }}</router-link>
+          </li>
+        </ul>
+      </template>
     </li>
   </ul>
 </template>
@@ -65,8 +41,15 @@ export default {
       links: [
         { text: 'About', href: '/about' },
         { text: 'News', href: '/news' },
-        // { text: 'Services', href: '/services' },
-        { text: 'Research', href: '/research-support' },
+        {
+          text: 'Services',
+          dropdown: true,
+          sublinks: [
+            { text: 'Research', href: '/research-support' },
+            { text: 'Our Partners', href: '/research-support/partner' }
+          ]
+        },
+        { text: 'My Account', href: '/account' },
         { text: 'Donate', href: '/donate' }
 
         // Add other links as needed
@@ -79,6 +62,32 @@ export default {
 <style scoped>
 .nav .d-flex {
   margin: 10px; /* Adds space above the items */
+}
+
+.nav-list {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown {
+  position: relative;
 }
 
 .nav-pills .nav-link.active {
