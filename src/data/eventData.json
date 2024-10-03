@@ -1,54 +1,98 @@
 [
   {
     "id": 1,
-    "name": "Mental Health Awareness Lecture",
-    "date": "2024-09-15T10:00:00",
-    "location": "Melbourne Convention Centre",
-    "host": "Mental Health Foundation",
-    "limit": 20
-  },
-  {
-    "id": 2,
     "name": "Networking for Mental Health Professionals",
     "date": "2024-09-22T14:00:00",
     "location": "Sydney Conference Hall",
     "host": "Mental Health Network",
-    "limit": 20
+    "limit": 5
   },
   {
+    "id": 2,
     "name": "Mindfulness Workshop",
     "date": "2024-10-05T09:00:00",
     "location": "Brisbane Wellness Centre",
-    "host": "Brisbane Wellness Group"
+    "host": "Brisbane Wellness Group",
+    "limit": 10
   },
   {
+    "id": 3,
     "name": "Stress Management Seminar",
     "date": "2024-10-12T13:30:00",
     "location": "Perth Community Center",
-    "host": "Western Australia Health Department"
+    "host": "Western Australia Health Department",
+    "limit": 50
   },
   {
+    "id": 4,
     "name": "Youth Mental Health Summit",
-    "date": "2024-10-20T11:00:00",
+    "date": "2024-10-12T13:30:00",
     "location": "Adelaide University",
-    "host": "National Youth Mental Health Initiative"
+    "host": "National Youth Mental Health Initiative",
+    "limit": 200
   },
   {
+    "id": 5,
     "name": "Cognitive Behavioral Therapy Workshop",
     "date": "2024-11-02T09:30:00",
     "location": "Hobart Medical Center",
-    "host": "Tasmanian Psychological Society"
+    "host": "Tasmanian Psychological Society",
+    "limit": 40
   },
   {
+    "id": 6,
     "name": "Mental Health in the Workplace Conference",
     "date": "2024-11-15T08:00:00",
     "location": "Canberra Business Hub",
-    "host": "Australian HR Institute"
+    "host": "Australian HR Institute",
+    "limit": 150
   },
   {
+    "id": 7,
     "name": "Art Therapy for Mental Wellness Exhibition",
-    "date": "2024-11-28T18:00:00",
+    "date": "2024-11-15T08:00:00",
     "location": "Gold Coast Art Gallery",
-    "host": "Creative Minds Collective"
+    "host": "Creative Minds Collective",
+    "limit": 75
+  },
+  {
+    "id": 8,
+    "name": "Depression and Anxiety Support Group Meeting",
+    "date": "2024-12-05T19:00:00",
+    "location": "Darwin Community Hall",
+    "host": "Northern Territory Mental Health Association",
+    "limit": 25
+  },
+  {
+    "id": 9,
+    "name": "Mental Health First Aid Training",
+    "date": "2024-12-05T19:00:00",
+    "location": "Newcastle Medical Institute",
+    "host": "NSW Health Services",
+    "limit": 35
+  },
+  {
+    "id": 10,
+    "name": "Holistic Mental Wellness Retreat",
+    "date": "2024-12-18T08:30:00",
+    "location": "Sunshine Coast Retreat Center",
+    "host": "Mindful Living Australia",
+    "limit": 60
+  },
+  {
+    "id": 11,
+    "name": "Mental Health Research Symposium",
+    "date": "2024-12-18T08:30:00",
+    "location": "Melbourne University",
+    "host": "Australian Psychology Research Network",
+    "limit": 120
+  },
+  {
+    "id": 12,
+    "name": "Workplace Mental Health Training",
+    "date": "2024-11-15T08:00:00",
+    "location": "Sydney Business District",
+    "host": "Corporate Wellness Association",
+    "limit": 80
   }
 ]
