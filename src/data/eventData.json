@@ -12,7 +12,7 @@
     "name": "Mindfulness Workshop",
     "date": "2024-10-05T09:00:00",
     "location": "Brisbane Wellness Centre",
-    "host": "Brisbane Wellness Group",
+    "host": "Southbank Wellness Group",
     "limit": 10
   },
   {
@@ -20,14 +20,14 @@
     "name": "Stress Management Seminar",
     "date": "2024-10-12T13:30:00",
     "location": "Perth Community Center",
-    "host": "Western Australia Health Department",
+    "host": "Carlton Community Health",
     "limit": 50
   },
   {
     "id": 4,
     "name": "Youth Mental Health Summit",
     "date": "2024-10-12T13:30:00",
-    "location": "Adelaide University",
+    "location": "Melbourne University",
     "host": "National Youth Mental Health Initiative",
     "limit": 200
   },
@@ -35,8 +35,8 @@
     "id": 5,
     "name": "Cognitive Behavioral Therapy Workshop",
     "date": "2024-11-02T09:30:00",
-    "location": "Hobart Medical Center",
-    "host": "Tasmanian Psychological Society",
+    "location": "Richmond Medical Center",
+    "host": "Richmond Mental Health Center",
     "limit": 40
   },
   {

@@ -12,17 +12,22 @@
         <h4 class="mb-0 ms-2">Go to Publish</h4>
       </router-link>
     </div>
+    <div class="publications-container">
+      <ReasearchCard />
+    </div>
   </div>
 </template>
 
 <script>
 // import PublishForm from '@/components/5_services/PublishForm.vue'
 import AppHeader from '@/components/0_common/AppHeader.vue'
+import ReasearchCard from '@/components/5_services/ReasearchCard.vue'
 
 export default {
   name: 'ResearchSupportView',
   components: {
-    AppHeader
+    AppHeader,
+    ReasearchCard
   }
 }
 </script>

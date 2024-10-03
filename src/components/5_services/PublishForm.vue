@@ -1,3 +1,4 @@
+<!-- researcher pass !1Aresearcher -->
 <template>
   <router-link to="/" class="navbar-brand d-flex align-items-start" style="padding-left: 15px">
     <img src="@/assets/images/logo.png" alt="Logo" height="40" />
@@ -67,6 +68,7 @@
 
 <script>
 import { ref } from 'vue'
+import { getAuth } from 'firebase/auth'
 import { getFirestore, collection, addDoc } from 'firebase/firestore'
 
 export default {
@@ -84,9 +86,12 @@ export default {
     })
 
     const handleSubmit = async () => {
+      const auth = getAuth()
+      const user = auth.currentUser
       const newPublication = {
         ...formData.value,
-        id: Date.now(),
+        userId: user.uid,
+        publicationId: Date.now(),
         date: new Date().toLocaleDateString()
       }
 

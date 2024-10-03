@@ -45,7 +45,9 @@
     </form>
     <!-- Google Sign-In Button -->
     <div class="text-center mt-3">
-      <button class="btn btn-secondary" @click="handleGoogleLogin">Login with Google</button>
+      <button class="btn btn-secondary" @click="handleGoogleLogin">
+        Login as member with Google
+      </button>
     </div>
     <div class="text-center mt-3">
       Haven't signed up yet? <router-link to="/signup">Sign up</router-link>
@@ -174,7 +176,7 @@ const handleLogin = async () => {
           // Store login status in localStorage
           localStorage.setItem(
             'currentUser',
-            JSON.stringify({ email: userEmail, isLoggedIn: true })
+            JSON.stringify({ email: userEmail, isLoggedIn: true, isResearcher: true })
           )
 
           if (formData.rememberMe) {
@@ -184,6 +186,7 @@ const handleLogin = async () => {
               JSON.stringify({
                 email: userEmail,
                 isLoggedIn: true,
+                isResearcher: true,
                 longerToken: true
               })
             )
@@ -203,7 +206,7 @@ const handleLogin = async () => {
   }
 }
 
-// Handle Google Login
+// Handle Google Login as member
 const handleGoogleLogin = async () => {
   try {
     const provider = new GoogleAuthProvider()
@@ -231,7 +234,7 @@ const handleGoogleLogin = async () => {
       JSON.stringify({
         email: user.email,
         isLoggedIn: true,
-        fullName: user.displayName
+        isResearcher: false
       })
     )
 

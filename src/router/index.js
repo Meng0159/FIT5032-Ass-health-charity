@@ -24,8 +24,20 @@ function userAuthenticated(to, from, next) {
     console.log('user authenticated')
   } else {
     alert('Please log in to access.')
-    next('/') // redirect to login if not authenticated
+    next('/') // redirect to home if not authenticated
     console.log('user not authenticated')
+  }
+}
+
+// Navigation guard to protect routes that require research role
+function userAuthenticatedRole(to, from, next) {
+  if (isAuthenticated() && JSON.parse(localStorage.getItem('currentUser')).isResearcher) {
+    next() // allow to enter route
+    console.log('researcher user authenticated')
+  } else {
+    alert('Please log in as researcher to access.')
+    next('/') // redirect to home if not authenticated
+    console.log('user not a researcher')
   }
 }
 
@@ -59,7 +71,7 @@ const router = createRouter({
       path: '/research-support/publish',
       name: 'publish',
       component: PublishForm,
-      beforeEnter: userAuthenticated
+      beforeEnter: userAuthenticatedRole
     },
     {
       path: '/research-support/partner',

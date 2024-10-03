@@ -1,12 +1,62 @@
 [
   {
-    "name": "Partner 1",
+    "name": "Melbourne Mental Health Alliance",
     "postcode": "3000",
     "location": [144.9631, -37.8136]
   },
   {
-    "name": "Partner 2",
-    "postcode": "2000",
-    "location": [151.2093, -33.8688]
+    "name": "CBD Wellness Center",
+    "postcode": "3000",
+    "location": [144.9587, -37.8155]
+  },
+  {
+    "name": "Victoria Health Services",
+    "postcode": "3004",
+    "location": [144.9841, -37.8274]
+  },
+  {
+    "name": "Youth Support Victoria",
+    "postcode": "3052",
+    "location": [144.9631, -37.7963]
+  },
+  {
+    "name": "Melbourne Psychology Network",
+    "postcode": "3053",
+    "location": [144.9676, -37.8024]
+  },
+  {
+    "name": "Corporate Mental Health Victoria",
+    "postcode": "3006",
+    "location": [144.9717, -37.8228]
+  },
+  {
+    "name": "Arts for Mental Health Victoria",
+    "postcode": "3065",
+    "location": [144.9868, -37.8037]
+  },
+  {
+    "name": "Carlton Community Health",
+    "postcode": "3053",
+    "location": [144.9697, -37.7994]
+  },
+  {
+    "name": "Parkville Medical Institute",
+    "postcode": "3052",
+    "location": [144.9572, -37.7939]
+  },
+  {
+    "name": "Southbank Wellness Hub",
+    "postcode": "3006",
+    "location": [144.9669, -37.8243]
+  },
+  {
+    "name": "Richmond Mental Health Center",
+    "postcode": "3121",
+    "location": [144.9989, -37.8182]
+  },
+  {
+    "name": "Docklands Health Collective",
+    "postcode": "3008",
+    "location": [144.9462, -37.8152]
   }
 ]

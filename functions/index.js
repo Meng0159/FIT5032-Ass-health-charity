@@ -17,6 +17,7 @@ const { onRequest } = require('firebase-functions/v2/https')
 const admin = require('firebase-admin')
 const cors = require('cors')({ origin: true })
 admin.initializeApp()
+const db = admin.firestore()
 
 // Function to monitor the capacity of an event -> EveentCalendar.js
 exports.monitorEventCapacity = onRequest(async (req, res) => {
@@ -28,7 +29,7 @@ exports.monitorEventCapacity = onRequest(async (req, res) => {
     }
 
     try {
-      const registrationsRef = admin.firestore().collection('eventRegistrations')
+      const registrationsRef = db.collection('eventRegistrations')
 
       // Get the number of registrations for the event
       const snapshot = await registrationsRef.where('attendEventid', '==', eventid).get()
@@ -47,6 +48,33 @@ exports.monitorEventCapacity = onRequest(async (req, res) => {
       })
     } catch (error) {
       console.error('Error monitoring event capacity:', error)
+      res.status(500).send({ message: 'Internal Server Error' })
+    }
+  })
+})
+
+// function to fetch publications from Firestore
+exports.getPublications = onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    try {
+      const publicationsRef = db.collection('publications')
+      const snapshot = await publicationsRef.get()
+
+      if (snapshot.empty) {
+        return res.status(404).send({ message: 'No publications found' })
+      }
+
+      const publications = []
+      snapshot.forEach((doc) => {
+        publications.push({
+          id: doc.id,
+          ...doc.data()
+        })
+      })
+
+      res.status(200).send(publications) // Send publications as JSON
+    } catch (error) {
+      console.error('Error fetching publications:', error)
       res.status(500).send({ message: 'Internal Server Error' })
     }
   })
