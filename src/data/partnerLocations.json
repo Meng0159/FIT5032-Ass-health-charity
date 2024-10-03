@@ -1,61 +1,73 @@
 [
   {
     "name": "Melbourne Mental Health Alliance",
+    "address": "200 Queen Street",
     "postcode": "3000",
     "location": [144.9631, -37.8136]
   },
   {
     "name": "CBD Wellness Center",
+    "address": "567 Collins Street",
     "postcode": "3000",
     "location": [144.9587, -37.8155]
   },
   {
     "name": "Victoria Health Services",
+    "address": "45 St Kilda Road",
     "postcode": "3004",
     "location": [144.9841, -37.8274]
   },
   {
     "name": "Youth Support Victoria",
+    "address": "156 Grattan Street",
     "postcode": "3052",
     "location": [144.9631, -37.7963]
   },
   {
     "name": "Melbourne Psychology Network",
+    "address": "325 Cardigan Street",
     "postcode": "3053",
     "location": [144.9676, -37.8024]
   },
   {
     "name": "Corporate Mental Health Victoria",
+    "address": "1 Southbank Boulevard",
     "postcode": "3006",
     "location": [144.9717, -37.8228]
   },
   {
     "name": "Arts for Mental Health Victoria",
+    "address": "90 Brunswick Street",
     "postcode": "3065",
     "location": [144.9868, -37.8037]
   },
   {
     "name": "Carlton Community Health",
+    "address": "241 Rathdowne Street",
     "postcode": "3053",
     "location": [144.9697, -37.7994]
   },
   {
     "name": "Parkville Medical Institute",
+    "address": "72 Royal Parade",
     "postcode": "3052",
     "location": [144.9572, -37.7939]
   },
   {
     "name": "Southbank Wellness Hub",
+    "address": "2 Riverside Quay",
     "postcode": "3006",
     "location": [144.9669, -37.8243]
   },
   {
     "name": "Richmond Mental Health Center",
+    "address": "381 Church Street",
     "postcode": "3121",
     "location": [144.9989, -37.8182]
   },
   {
     "name": "Docklands Health Collective",
+    "address": "815 Bourke Street",
     "postcode": "3008",
     "location": [144.9462, -37.8152]
   }

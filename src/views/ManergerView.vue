@@ -141,11 +141,14 @@ import DataTable from 'primevue/datatable'
 // import RadioButton from 'primevue/radiobutton'
 import Column from 'primevue/column'
 import Rating from 'primevue/rating'
+import db from '../components/4_firebase/init.js'
+import { getDocs, collection, query } from 'firebase/firestore'
 
-// import ColumnGroup from 'primevue/columngroup' // optional
+// import ColumnGroup from 'primevue/columngroup' // optional    , where, orderBy, limit
 // import Row from 'primevue/row'
 
 const users = ref([])
+const donationData = ref([])
 const userFields = ['fullName', 'email', 'phoneNumber', 'dob', 'gender', 'role', 'postcode']
 const donationFields = ['role', 'name', 'date', 'email', 'phone', 'amount', 'city']
 const getHeader = (field) => {
@@ -156,9 +159,29 @@ const getHeader = (field) => {
     .trim()
 }
 
+const fetchData = async () => {
+  try {
+    const qUser = query(collection(db, 'users'))
+    const queryUserSnapshot = await getDocs(qUser)
+    const usersArray = []
+    queryUserSnapshot.forEach((doc) => {
+      usersArray.push({ id: doc.id, ...doc.data() })
+    })
+    users.value = usersArray
+    const qDonation = query(collection(db, 'donations'))
+    const queryDonationSnapshot = await getDocs(qDonation)
+    const udonationsArray = []
+    queryDonationSnapshot.forEach((doc) => {
+      udonationsArray.push({ id: doc.id, ...doc.data() })
+    })
+    donationData.value = udonationsArray
+  } catch (error) {
+    console.error('Error fetching books: ', error)
+  }
+}
+
 onMounted(() => {
-  users.value = JSON.parse(localStorage.getItem('users')) || []
-  donationData.value = JSON.parse(localStorage.getItem('donations')) || []
+  fetchData()
 })
 
 const removeUser = (user) => {
@@ -168,12 +191,6 @@ const removeUser = (user) => {
     localStorage.setItem('users', JSON.stringify(users.value))
   }
 }
-const donationData = ref([])
-// const donationDataTest = ref([
-//   { id: 1, name: 'Donation 1', amount: 100 },
-//   { id: 2, name: 'Donation 2', amount: 200 }
-// ])
-// const filteredDonationstest = computed(() => donationDataTest.value)
 
 const donationFilter = ref('')
 const selectedDonation = ref(null)

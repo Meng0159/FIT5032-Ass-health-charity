@@ -1,7 +1,8 @@
 <template>
   <div class="services">
     <AppHeader />
-    <h1>Our Services</h1>
+    <h1>Our Partners</h1>
+
     <Mapbox />
   </div>
 </template>
