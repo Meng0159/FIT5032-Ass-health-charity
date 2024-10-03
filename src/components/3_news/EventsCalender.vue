@@ -11,10 +11,13 @@
         <p><strong>Location:</strong> {{ selectedEvent.location }}</p>
         <p><strong>Date:</strong> {{ selectedEvent.date }}</p>
         <p><strong>Host:</strong> {{ selectedEvent.host }}</p>
+        <p><strong>Available Spots:</strong> {{ availableSpots }}</p>
       </template>
       <template #footer>
         <!-- Register button navigates to eventRegisterForm.vue -->
-        <button class="btn btn-primary" @click="registerForEvent">Register</button>
+        <button :class="registerButtonClass" :disabled="isFull" @click="registerForEvent">
+          {{ registerButtonText }}
+        </button>
         <button class="btn btn-secondary" @click="closeModal">Cancel</button>
       </template>
     </Modal>
@@ -44,6 +47,10 @@ const calendarOptions = ref({
   eventClick: handleEventClick // Handle event clicks
 })
 
+// State for registration button
+const isFull = ref(false)
+const registerButtonText = ref('Register')
+const registerButtonClass = ref('btn btn-primary')
 // Load events from JSON
 onMounted(() => {
   loadEvents()
@@ -51,10 +58,12 @@ onMounted(() => {
 
 function loadEvents() {
   const formattedEvents = eventData.map((event) => ({
+    id: event.id, // Add event ID to each event
     title: event.name,
     date: event.date,
     location: event.location,
-    host: event.host
+    host: event.host,
+    limit: event.limit // Include the registration limit
   }))
   calendarOptions.value.events = formattedEvents
 }
@@ -62,11 +71,14 @@ function loadEvents() {
 // Handle event click and show modal
 function handleEventClick(info) {
   selectedEvent.value = {
+    id: info.event.id, // Save the event ID
     title: info.event.title,
     location: info.event.extendedProps.location,
     host: info.event.extendedProps.host,
-    date: info.event.start // Date object
+    date: info.event.start, // Date object
+    limit: info.event.extendedProps.limit // Store event registration limit
   }
+  checkEventCapacity(info.event.id) // Check if the event is full
   showModal.value = true
 }
 

@@ -6,46 +6,42 @@
  * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
  *
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ *
+ * To deploy this function:
+ * firebase deploy --only functions:
  */
 
-// Create and deploy your first functions
+// Create and deploy your first functions-> firebase deploy
 // https://firebase.google.com/docs/functions/get-started
+const { onRequest } = require('firebase-functions/v2/https')
+const admin = require('firebase-admin')
+const cors = require('cors')({ origin: true })
+admin.initializeApp()
+exports.monitorEventCapacity = functions.https.onRequest(async (req, res) => {
+  const { eventid } = req.query
 
-const functions = require('firebase-functions/v2/https')
-const sendgrid = require('@sendgrid/mail')
-const logger = require('firebase-functions/logger')
-
-// Set SendGrid API Key
-sendgrid.setApiKey('YOUR_SENDGRID_API_KEY')
-
-// Cloud Function to send email
-exports.sendInvoiceEmail = functions.onRequest(async (req, res) => {
   try {
-    const { email, name, donationAmount } = req.body
+    const registrationsRef = db.collection('eventRegistrations')
+    const snapshot = await registrationsRef.where('eventid', '==', eventid).get()
 
-    // Create the attachment (Invoice)
-    const invoiceData = `Invoice for ${name}\nDonation Amount: ${donationAmount}`
-    const base64Invoice = Buffer.from(invoiceData).toString('base64')
+    const totalRegistrations = snapshot.size
 
-    const msg = {
-      to: email,
-      from: 'no-reply@mentalhealthy.com', // Your verified sender
-      subject: 'Your Donation Invoice',
-      text: `Hello ${name},\nThank you for your donation.`,
-      attachments: [
-        {
-          content: base64Invoice,
-          filename: 'invoice.txt',
-          type: 'text/plain',
-          disposition: 'attachment'
-        }
-      ]
+    const eventRef = db.collection('events').doc(eventid)
+    const eventSnapshot = await eventRef.get()
+
+    if (!eventSnapshot.exists) {
+      return res.status(404).send({ message: 'Event not found' })
     }
 
-    await sendgrid.send(msg)
-    res.status(200).send('Invoice sent successfully.')
+    const eventLimit = eventSnapshot.data().limit
+    const availableSpots = eventLimit - totalRegistrations
+
+    res.send({
+      availableSpots: availableSpots > 0 ? availableSpots : 0,
+      isFull: availableSpots <= 0
+    })
   } catch (error) {
-    logger.error('Error sending email: ', error)
-    res.status(500).send('Failed to send email.')
+    console.error('Error monitoring event capacity:', error)
+    res.status(500).send({ message: 'Internal Server Error' })
   }
 })

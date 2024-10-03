@@ -264,6 +264,7 @@
 <script setup>
 import { ref } from 'vue'
 import { getFirestore, collection, addDoc } from 'firebase/firestore'
+
 // import axios from 'axios'
 
 const db = getFirestore()
@@ -340,6 +341,33 @@ const validateAmount = () => {
   }
 }
 
+// // Function to send invoice via SendGrid
+// const sendInvoiceEmail = async (donationData) => {
+//   try {
+//     const currentTime = new Date().toISOString()
+//     const msg = {
+//       to: donationFields.value.email, // recipient's email
+//       from: 'mlee0159mon@gmail.com', // your registered sender email
+//       subject: 'Donation Invoice',
+//       text: `Dear ${donationData.name},\n\nThank you for your donation of ${donationData.amount}.\n\nBest regards,\nYour Organization`,
+//       attachments: [
+//         {
+//           content: invoiceData.base64Content,
+//           filename: 'invoice.pdf',
+//           type: 'application/pdf',
+//           disposition: 'attachment',
+//           created: currentTime,
+//           logo: logoPath
+//         }
+//       ]
+//     }
+//     await sgMail.send(msg)
+//     console.log('Email sent successfully')
+//   } catch (error) {
+//     console.error('Error sending email:', error)
+//   }
+// }
+
 const submitDonation = async () => {
   validateAmount()
   validateEmail()
@@ -370,16 +398,24 @@ const submitDonation = async () => {
     try {
       // Add the donation data to Firestore
       await addDoc(collection(db, 'donations'), donationData)
+      console.log('Donation successfully stored in Firestore')
 
-      // Trigger Cloud Function to send the invoice email
-      // await axios.post('https://YOUR_CLOUD_FUNCTION_URL', {
-      //   email: donationData.email,
-      //   name: donationData.name,
-      //   donationAmount: donationData.amount
-      // })
+      // Trigger SendGridAPI to send the invoice email
+      const response = await fetch('http://localhost:3000/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(donationData)
+      })
 
-      alert('Thank you for your donation! Invoice has been sent to your email.')
-      resetForm()
+      if (response.ok) {
+        alert('Donation submitted and invoice sent successfully!')
+        resetForm()
+      } else {
+        const errorMsg = await response.text()
+        alert(`Error: ${errorMsg}`)
+      }
     } catch (error) {
       console.error('Error saving donation: ', error)
       alert('There was an error processing your donation. Please try again.')
