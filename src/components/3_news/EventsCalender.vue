@@ -28,7 +28,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, collection, addDoc } from 'firebase/firestore'
+import { getFirestore, collection, addDoc, getDocs, query, where } from 'firebase/firestore'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -123,6 +123,21 @@ async function registerForEvent() {
   const user = auth.currentUser
 
   if (user && !isFull.value) {
+    const userId = user.uid
+    const eventid = selectedEvent.value.id
+    // Check if the user has already registered for this event
+    const registrationsRef = collection(db, 'eventRegistrations')
+    const q = query(
+      registrationsRef,
+      where('userId', '==', userId),
+      where('attendEventid', '==', eventid)
+    )
+    const querySnapshot = await getDocs(q)
+
+    if (!querySnapshot.empty) {
+      alert('You have already registered for this event.')
+      return // Stop the registration process if the user is already registered
+    }
     try {
       // Add the event registration to Firestore
       await addDoc(collection(db, 'eventRegistrations'), {
@@ -136,6 +151,7 @@ async function registerForEvent() {
         registeredAt: new Date() // Timestamp of registration
       })
 
+      console.log('userId:', user.uid)
       alert(`You have successfully registered for ${selectedEvent.value.title}`)
       closeModal()
     } catch (error) {

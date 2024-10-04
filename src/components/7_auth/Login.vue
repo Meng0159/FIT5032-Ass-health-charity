@@ -161,6 +161,9 @@ const handleLogin = async () => {
       if (userDoc.exists()) {
         const userData = userDoc.data()
         const isManager = userData.isManager
+        const isResearcher = userData.role === 'researcher'
+        const user = auth.currentUser
+        const userId = user.uid
 
         // Check if user is a manager and navigate accordingly
         if (isManager) {
@@ -176,7 +179,7 @@ const handleLogin = async () => {
           // Store login status in localStorage
           localStorage.setItem(
             'currentUser',
-            JSON.stringify({ email: userEmail, isLoggedIn: true, isResearcher: true })
+            JSON.stringify({ uid: userId, isLoggedIn: true, isResearcher: isResearcher })
           )
 
           if (formData.rememberMe) {
@@ -184,9 +187,9 @@ const handleLogin = async () => {
             localStorage.setItem(
               'currentUser',
               JSON.stringify({
-                email: userEmail,
+                uid: userId,
                 isLoggedIn: true,
-                isResearcher: true,
+                isResearcher: isResearcher,
                 longerToken: true
               })
             )

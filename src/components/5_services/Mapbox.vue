@@ -5,28 +5,34 @@
       <div class="row">
         <div class="col-md-6">
           <div class="location-input">
-            <input
-              type="text"
-              v-model="userLocationInput"
-              placeholder="Enter your location to get trip detail"
-              class="form-control"
-            />
-            <button @click="useCurrentLocation" class="btn btn-secondary w-100">
+            <div class="col">
+              <input
+                type="text"
+                v-model="userLocationInput"
+                placeholder="Enter your location to get trip detail"
+                class="form-control"
+              />
+              <p class="mt-2">ex. Wellington Rd, Clayton</p>
+            </div>
+            <button @click="useCurrentLocation" class="btn btn-secondary w-95">
               Use My Location
+            </button>
+            <button @click="setUserLocationFromInput" class="btn btn-success w-95">
+              Go Location
             </button>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="partner-search">
-            <input
-              type="text"
-              v-model="searchQuery"
-              @keyup.enter="searchByPostcode"
-              placeholder="Enter postcode to find nearest partner"
-              class="form-control"
-            />
-            <button @click="searchByPostcode" class="btn btn-primary w-100">Search</button>
-          </div>
+
+        <div class="col-md-6 partner-search">
+          <input
+            type="text"
+            v-model="searchQuery"
+            @keyup.enter="searchByPostcode"
+            placeholder="Enter postcode to find nearest partner"
+            class="form-control"
+          />
+          <button @click="startVoiceSearch" class="btn btn-secondary w-25">Voice Search</button>
+          <button @click="searchByPostcode" class="btn btn-primary w-25">Search</button>
         </div>
       </div>
     </div>
@@ -38,7 +44,13 @@
         Get Trip Details
       </button>
       <div v-if="tripDetails" class="trip-details">
-        <h4>Trip Details</h4>
+        <h4>
+          <span class="trip-icon" @click="playTripDetails">
+            <i class="fas fa-volume-up"></i>
+            <!-- FontAwesome icon for volume -->
+          </span>
+          Trip Details
+        </h4>
         <div class="location-details">
           <p>
             <strong>From:</strong>
@@ -110,6 +122,42 @@ async function useCurrentLocation() {
     updateUserMarker()
   } catch (error) {
     handleLocationError(error)
+  }
+}
+
+async function setUserLocationFromInput() {
+  if (!userLocationInput.value) {
+    locationError.value = 'Please enter a valid location.'
+    return
+  }
+
+  try {
+    // Define a bounding box for Victoria, Australia (rough coordinates)
+    const vicBbox = [140.9617, -39.1591, 150.051, -33.9806] // [minLng, minLat, maxLng, maxLat]
+
+    // Use Mapbox Geocoding API, specifying proximity to Melbourne and bounding box for Victoria
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(userLocationInput.value)}.json?bbox=${vicBbox.join(',')}&proximity=144.9631,-37.8136&types=address,place&access_token=${mapboxgl.accessToken}`
+    )
+    const data = await response.json()
+
+    if (data.features && data.features.length > 0) {
+      const [longitude, latitude] = data.features[0].center
+      userLocation.value = [longitude, latitude]
+
+      updateUserMarker() // Update the map marker based on new location
+      map.value.flyTo({
+        center: userLocation.value,
+        zoom: 12
+      })
+
+      locationError.value = null // Clear any errors
+    } else {
+      locationError.value = 'No location found. Please check the suburb or address name.'
+    }
+  } catch (error) {
+    console.error('Error getting location coordinates:', error)
+    locationError.value = 'Failed to find the location. Try again.'
   }
 }
 
@@ -257,6 +305,12 @@ onMounted(() => {
 .partner-search {
   display: flex;
   gap: 10px;
+}
+.highlight-line {
+  height: 4px; /* Height of the highlight line */
+  background-color: #007bff; /* Color of the highlight line */
+  margin-top: 5px; /* Space above the line */
+  cursor: pointer; /* Change cursor to pointer */
 }
 
 .search-input {

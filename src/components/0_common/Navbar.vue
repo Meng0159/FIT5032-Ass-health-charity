@@ -49,7 +49,7 @@ export default {
             { text: 'Our Partners', href: '/research-support/partner' }
           ]
         },
-        { text: 'My Account', href: '/account' },
+        { text: 'My Account', href: '/my-account' },
         { text: 'Donate', href: '/donate' }
 
         // Add other links as needed

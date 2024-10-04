@@ -54,6 +54,27 @@ app.post('/api/send-email', async (req, res) => {
   }
 })
 
+// Bulk email sending endpoint for sending emails to multiple donations recipients
+app.post('/api/send-bulkEmail', async (req, res) => {
+  const { emails, subject, text, html } = req.body
+
+  const messages = emails.map((email) => ({
+    to: email,
+    from: 'mlee0159mon@gmail.com', // Change this to your verified sender
+    subject: subject,
+    text: text,
+    html: html
+  }))
+
+  try {
+    await sgMail.send(messages)
+    res.status(200).send('Bulk email sent successfully')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Error sending bulk email')
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`)
 })

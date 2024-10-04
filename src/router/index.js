@@ -5,9 +5,9 @@ import NewsView from '../views/NewsView.vue'
 import DonateView from '@/views/DonateView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
-import ManergerView from '../views/ManergerView.vue'
+import AdminDashboardView from '../views/AdminDashboardView.vue'
 import ResearchSupportView from '@/views/ResearchSupportView.vue'
-
+import MyAccountView from '@/views/MyAccountView.vue'
 import ErrorPage from '@/components/8_security/ErrorDisplay.vue'
 import PublishForm from '@/components/5_services/PublishForm.vue'
 
@@ -96,7 +96,7 @@ const router = createRouter({
     {
       path: '/manager',
       name: 'manager',
-      component: ManergerView,
+      component: AdminDashboardView,
       // ensures that only one-time logged-in managers can access the route.
       // updated with manager's firebase authentication
       beforeEnter: (to, from, next) => {
@@ -109,6 +109,12 @@ const router = createRouter({
           next('/login')
         }
       }
+    },
+    {
+      path: '/my-account',
+      name: 'my-account',
+      component: MyAccountView,
+      beforeEnter: userAuthenticated
     },
     {
       path: '/errorPage',
