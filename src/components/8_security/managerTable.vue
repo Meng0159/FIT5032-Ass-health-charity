@@ -51,7 +51,11 @@
         <div class="row">
           <div class="filter-section col-auto">
             <label for="donationFilter" class="col-auto">Filter Donations:</label>
-            <select v-model="donationFilter" id="donationFilter" class="col-auto filter-dropdown">
+            <select
+              v-model="donationRoleFilter"
+              id="donationFilter"
+              class="col-auto filter-dropdown"
+            >
               <option value="">All Donations</option>
               <option value="individual">Individual</option>
               <option value="organisation">Organisation</option>
@@ -75,10 +79,10 @@
             <button @click="searchInDonation" class="btn btn-primary search-btn">Search</button>
           </div>
         </div>
-
+        <!-- update with search and amount filter -->
         <DataTable
           v-model:selection="selectedDonations"
-          :value="filteredDonations"
+          :value="searchResults.length ? searchResults : filteredDonations"
           selectionMode="multiple"
           responsiveLayout="scroll"
           :rowClass="selectRow"
@@ -101,10 +105,11 @@
                 v-for="i in 5"
                 :key="i"
                 class="star"
-                :class="{ filled: i <= Math.round(averageRating) }"
+                :class="{ filled: i <= Math.floor(averageRating) }"
               >
                 ★
               </span>
+              <span v-if="averageRating % 1 >= 0.5" class="star half-filled">★</span>
             </div>
             <span class="rating-value">({{ averageRating.toFixed(1) }})</span>
           </div>
@@ -198,12 +203,6 @@ import {
   getCountFromServer
 } from 'firebase/firestore'
 
-// import ColumnGroup from 'primevue/columngroup' // optional    , where, orderBy, limit
-// import Row from 'primevue/row'
-
-const users = ref([])
-const currentPage = ref(1)
-const donationData = ref([])
 const userFields = ['fullName', 'email', 'phoneNumber', 'dob', 'gender', 'role', 'postcode']
 const donationFields = ['role', 'name', 'date', 'email', 'phone', 'amount', 'city']
 const getHeader = (field) => {
@@ -214,6 +213,9 @@ const getHeader = (field) => {
     .trim()
 }
 
+const currentPage = ref(1)
+const donationsPerPage = 10 // Number of donations per page
+const totalDonations = ref(0) // Track total number of donations
 // Computed property to get total number of pages
 const totaldonationPages = computed(() => {
   // console.log('page:', currentPage.value, 'total donate num:', totalDonations.value)
@@ -223,29 +225,42 @@ const totaldonationPages = computed(() => {
 // Function to go to the next page
 const nextPage = () => {
   currentPage.value++
-  fetchData()
+  fetchDonationData()
 }
 
 // Function to go to the previous page
 const previousPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--
-    fetchData()
+    fetchDonationData()
   }
 }
 
-const donationsPerPage = 5 // Number of donations per page
-const totalDonations = ref('0') // Track total number of donations
-const fetchData = async () => {
+// Average rating computed property
+const averageRating = computed(() => {
+  if (donationData.value.length === 0) return null
+  const total = donationData.value.reduce(
+    (sum, donation) => sum + parseInt(donation.rating || 0),
+    0
+  )
+  console.log(
+    'avg:',
+    total / donationData.value.length,
+    'donationData.value.length:',
+    donationData.value.length
+  )
+  return total / donationData.value.length
+})
+
+const donationData = ref([])
+const donationRoleFilter = ref('')
+const selectedDonations = ref(null)
+const amountRange = ref('') // Store selected amount range
+const searchKeyword = ref('')
+
+// Function to fetch donation data
+const fetchDonationData = async () => {
   try {
-    const qUser = query(collection(db, 'users'), orderBy('fullName'))
-    const queryUserSnapshot = await getDocs(qUser)
-    const usersArray = []
-    queryUserSnapshot.forEach((doc) => {
-      usersArray.push({ id: doc.id, ...doc.data() })
-    })
-    users.value = usersArray
-    // const qDonation = query(collection(db, 'donations'), limit(donationsPerPage))
     // Calculate the offset for pagination
     let donationQuery
 
@@ -257,80 +272,66 @@ const fetchData = async () => {
       const previousPageDocs = await getDocs(
         query(
           collection(db, 'donations'),
-          orderBy('amount'),
+          orderBy('name'),
           limit((currentPage.value - 1) * donationsPerPage)
         )
       )
       const lastVisible = previousPageDocs.docs[previousPageDocs.docs.length - 1]
       donationQuery = query(
         collection(db, 'donations'),
-        orderBy('amount'),
+        orderBy('name'),
         startAfter(lastVisible),
         limit(donationsPerPage)
       )
     }
-    // Fetch total count of donations
-    const coll = collection(db, 'donations')
-    const snapshot = await getCountFromServer(coll)
-    // const allDonationsSnapshot = await getDocs(collection(db, 'donations'))
-    totalDonations.value = snapshot.data().count // Set total count
+
+    // Apply amount filter if selected
+    if (amountRange.value) {
+      const qDonation = collection(db, 'donations')
+      if (amountRange.value === '<100') {
+        donationQuery = query(qDonation, where('amount', '<', '100'))
+      } else if (amountRange.value === '100-500') {
+        donationQuery = query(qDonation, where('amount', '>=', '100'), where('amount', '<=', '500'))
+      } else if (amountRange.value === '>500') {
+        donationQuery = query(qDonation, where('amount', '>', '500'))
+      }
+    }
 
     // Execute the query
     const querySnapshot = await getDocs(donationQuery)
-
-    // Store the results
     donationData.value = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
 
-    // const udonationsArray = []
-    // queryDonationSnapshot.forEach((doc) => {
-    //   udonationsArray.push({ id: doc.id, ...doc.data() })
-    // })
-    // donationData.value = udonationsArray
+    // Fetch total count of donations
+    const coll = collection(db, 'donations')
+    const snapshot = await getCountFromServer(coll)
+    totalDonations.value = snapshot.data().count // Set total count
   } catch (error) {
-    console.error('Error fetching books: ', error)
+    console.error('Error fetching donations: ', error)
   }
 }
 
 onMounted(() => {
-  fetchData()
+  fetchDonationData()
+  fetchUserData()
 })
 
-const donationFilter = ref('')
-const selectedDonations = ref(null)
-const amountRange = ref('') // Store selected amount range
-const searchKeyword = ref('')
-
-// Function to filter donations by amount range
 const filterByAmount = async () => {
-  currentPage.value = 1 // Reset to the first page
-  fetchData()
-  try {
-    let qDonation = collection(db, 'donations')
-    let donationQuery = query(qDonation, orderBy('amount'))
-
-    // Determine the query based on the selected amount range
-    if (amountRange.value === '<100') {
-      donationQuery = query(qDonation, where('amount', '<', '10000'))
-    } else if (amountRange.value === '100-500') {
-      donationQuery = query(
-        qDonation,
-        where('amount', '>=', '10000'),
-        where('amount', '<=', '50000')
-      )
-    } else if (amountRange.value === '>500') {
-      donationQuery = query(qDonation, where('amount', '>', '50000'))
-    }
-
-    const querySnapshot = await getDocs(donationQuery)
-    donationData.value = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-  } catch (error) {
-    console.error('Error fetching donations by amount:', error)
-  }
+  await fetchDonationData(true) // Reset to the first page and fetch data
 }
-// seearch function in donation
+
+const searchResults = ref([])
+
 const searchInDonation = async () => {
   try {
     const keyword = searchKeyword.value.toLowerCase()
+
+    // If no keyword, reset to full donationData
+    if (!keyword) {
+      searchResults.value = donationData.value
+      return
+    }
+
+    // Filter the donations based on name, email, or city
     const filteredResults = donationData.value.filter((donation) => {
       return (
         donation.name.toLowerCase().includes(keyword) ||
@@ -338,21 +339,22 @@ const searchInDonation = async () => {
         donation.city.toLowerCase().includes(keyword)
       )
     })
-    donationData.value = filteredResults // Update the donation data with filtered results
+    searchResults.value = filteredResults // Update the search results
   } catch (error) {
     console.error('Error searching donations:', error)
   }
 }
 
-// Computed property to filter donations based on donationFilter (role) selection
+// Computed property to filter donations based on donationRoleFilter selection
+// Computed property to filter donations based on donationRoleFilter selection
 const filteredDonations = computed(() => {
-  if (!donationFilter.value) {
+  if (!donationRoleFilter.value) {
     return donationData.value // Show all donations if no filter is selected
   }
-  return donationData.value.filter((donation) => donation.role === donationFilter.value)
+  return donationData.value.filter((donation) => donation.role === donationRoleFilter.value)
 })
 
-// Function to
+// Function to send bulk email to selected donations
 const sendBulkEmail = async () => {
   const emails = selectedDonations.value.map((donation) => donation.email)
 
@@ -374,7 +376,7 @@ const sendBulkEmail = async () => {
     })
 
     if (response.ok) {
-      console.log('Bulk email sent successfully')
+      alert('Bulk email sent successfully')
       console.log('Survay email sent to:', emails)
     } else {
       console.error('Failed to send bulk email')
@@ -384,11 +386,17 @@ const sendBulkEmail = async () => {
   }
 }
 
-const averageRating = computed(() => {
-  if (donationData.value.length === 0) return null
-  const sum = donationData.value.reduce((acc, donation) => acc + parseInt(donation.rating), 0)
-  return sum / donationData.value.length
-})
+const users = ref([])
+// Function to fetch user data
+const fetchUserData = async () => {
+  const qUser = query(collection(db, 'users'), orderBy('fullName'))
+  const queryUserSnapshot = await getDocs(qUser)
+  const usersArray = []
+  queryUserSnapshot.forEach((doc) => {
+    usersArray.push({ id: doc.id, ...doc.data() })
+  })
+  users.value = usersArray
+}
 
 // interactive functions for user table
 const isModalVisible = ref(false)
@@ -587,5 +595,21 @@ h2 {
   color: white;
   border: none;
   border-radius: 5px;
+}
+.star {
+  font-size: 24px; /* Adjust star size */
+  color: #ccc; /* Default color for stars */
+}
+
+.filled {
+  color: gold; /* Color for filled stars */
+}
+
+.half-filled {
+  color: gold; /* Color for the half star */
+  width: 50%; /* Adjust width for half */
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
 }
 </style>

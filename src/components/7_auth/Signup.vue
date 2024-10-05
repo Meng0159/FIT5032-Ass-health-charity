@@ -1,165 +1,206 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="register-page container py-5">
-    <h2 class="text-center mb-4">Sign Up Now</h2>
+    <h1 class="text-center mb-4">Sign Up Now</h1>
     <form @submit.prevent="handleSubmit" class="mx-auto" style="max-width: 600px">
-      <div class="form-group mb-3">
-        <label for="fullName">Full Name</label>
-        <input
-          type="text"
-          id="fullName"
-          v-model="formData.fullName"
-          class="form-control"
-          :class="{ 'is-invalid': errors.fullName }"
-          placeholder="Enter your full name"
-          required
-        />
-        <div v-if="errors.fullName" class="invalid-feedback">{{ errors.fullName }}</div>
-      </div>
-
-      <div class="form-group mb-3">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          v-model="formData.email"
-          class="form-control"
-          :class="{ 'is-invalid': errors.email }"
-          placeholder="Enter your email"
-          @blur="validateEmail"
-        />
-        <div v-if="errors.email" class="invalid-feedback">{{ errors.email }}</div>
-      </div>
-
-      <div class="form-group mb-3">
-        <label for="phoneNumber">Phone Number</label>
-        <input
-          type="tel"
-          id="phoneNumber"
-          v-model="formData.phoneNumber"
-          class="form-control"
-          :class="{ 'is-invalid': errors.phoneNumber }"
-          placeholder="Enter your phone number"
-          @blur="() => validatePhoneNumber(true)"
-        />
-        <div v-if="errors.phoneNumber" class="invalid-feedback">{{ errors.phoneNumber }}</div>
-      </div>
-
-      <div class="form-group mb-3">
-        <div class="row">
-          <div class="col">
-            <label for="dob">Date of Birth</label>
-            <input
-              type="date"
-              id="dob"
-              v-model="formData.dob"
-              class="form-control"
-              :class="{ 'is-invalid': errors.dob }"
-              @blur="validateBirthDate"
-            />
-            <div v-if="errors.dob" class="invalid-feedback">{{ errors.dob }}</div>
-          </div>
-          <div class="col">
-            <label for="gender">Gender</label>
-            <select id="gender" v-model="formData.gender" class="form-control">
-              <option value="" disabled>Select your gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="preferNotToSay">Prefer not to say</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group mb-3">
-        <div class="row">
-          <div class="col">
-            <label for="country">Country</label>
-            <input
-              type="text"
-              id="country"
-              v-model="formData.country"
-              class="form-control"
-              :class="{ 'is-invalid': errors.country }"
-              placeholder="Enter your country"
-              required
-            />
-            <div v-if="errors.country" class="invalid-feedback">{{ errors.country }}</div>
-          </div>
-          <div class="col">
-            <label for="postcode">Postcode</label>
-            <input
-              type="text"
-              id="postcode"
-              v-model="formData.postcode"
-              class="form-control"
-              :class="{ 'is-invalid': errors.postcode }"
-              placeholder="Enter your postcode"
-              min="1000"
-              max="9999"
-              required
-            />
-            <div v-if="errors.postcode" class="invalid-feedback">{{ errors.postcode }}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group mb-3">
-        <label for="role">Role</label>
-        <select
-          id="role"
-          v-model="formData.role"
-          class="form-control"
-          :class="{ 'is-invalid': errors.role }"
-          required
-        >
-          <option value="" disabled>Select your role</option>
-          <option value="researcher">Researcher</option>
-          <option value="member">Member</option>
-        </select>
-        <div v-if="errors.role" class="invalid-feedback">{{ errors.role }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-6 form-group">
-          <label for="password">Password</label>
+      <!-- Added role="form" for better semantics -->
+      <div role="form">
+        <div class="form-group mb-3">
+          <label for="fullName">Full Name</label>
           <input
-            type="password"
+            type="text"
+            id="fullName"
+            v-model="formData.fullName"
             class="form-control"
-            id="password"
-            @blur="() => validatePassword(true)"
-            @input="() => validatePassword(false)"
-            v-model="formData.password"
+            :class="{ 'is-invalid': errors.fullName }"
+            placeholder="Enter your full name"
+            required
+            aria-required="true"
+            aria-describedby="fullNameError"
           />
-
-          <div class="text-danger" v-if="errors.password">{{ errors.password }}</div>
+          <div v-if="errors.fullName" class="invalid-feedback" id="fullNameError">
+            {{ errors.fullName }}
+          </div>
         </div>
 
-        <div class="col-md-6 col-sm-6 form-group">
-          <label for="confirmPassword">Confirm Password</label>
+        <div class="form-group mb-3">
+          <label for="email">Email</label>
           <input
-            type="password"
+            type="email"
+            id="email"
+            v-model="formData.email"
             class="form-control"
-            id="confirmPassword"
-            v-model="formData.confirmPassword"
-            @blur="() => validateConfirmPassword(true)"
+            :class="{ 'is-invalid': errors.email }"
+            placeholder="Enter your email"
+            @blur="validateEmail"
+            required
+            aria-required="true"
+            aria-describedby="emailError"
           />
-          <div class="text-danger" v-if="errors.confirmPassword">{{ errors.confirmPassword }}</div>
+          <div v-if="errors.email" class="invalid-feedback" id="emailError">{{ errors.email }}</div>
         </div>
-      </div>
-      <div class="text-muted">
-        At least 8 characters long and contain at least one number, and one special character.
-      </div>
-      <div class="form-group mb-3 form-check">
-        <input
-          type="checkbox"
-          id="subscribe"
-          v-model="formData.subscribe"
-          class="form-check-input"
-        />
-        <label for="subscribe" class="form-check-label">Subscribe to our newsletter</label>
-      </div>
-      <div class="d-flex justify-content-center">
-        <button type="submit" class="btn btn-primary">SignUp</button>
+
+        <div class="form-group mb-3">
+          <label for="phoneNumber">Phone Number</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            v-model="formData.phoneNumber"
+            class="form-control"
+            :class="{ 'is-invalid': errors.phoneNumber }"
+            placeholder="Enter your phone number"
+            @blur="() => validatePhoneNumber(true)"
+            aria-describedby="phoneNumberError"
+          />
+          <div v-if="errors.phoneNumber" class="invalid-feedback" id="phoneNumberError">
+            {{ errors.phoneNumber }}
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <div class="row">
+            <div class="col">
+              <label for="dob">Date of Birth</label>
+              <input
+                type="date"
+                id="dob"
+                v-model="formData.dob"
+                class="form-control"
+                :class="{ 'is-invalid': errors.dob }"
+                @blur="validateBirthDate"
+                aria-describedby="dobError"
+              />
+              <div v-if="errors.dob" class="invalid-feedback" id="dobError">{{ errors.dob }}</div>
+            </div>
+            <div class="col">
+              <label for="gender">Gender</label>
+              <select
+                id="gender"
+                v-model="formData.gender"
+                class="form-control"
+                aria-describedby="genderHelp"
+              >
+                <option value="" disabled>Select your gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="preferNotToSay">Prefer not to say</option>
+              </select>
+              <div id="genderHelp" class="form-text">Optional field</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <div class="row">
+            <div class="col">
+              <label for="country">Country</label>
+              <input
+                type="text"
+                id="country"
+                v-model="formData.country"
+                class="form-control"
+                :class="{ 'is-invalid': errors.country }"
+                placeholder="Enter your country"
+                required
+                aria-required="true"
+                aria-describedby="countryError"
+              />
+              <div v-if="errors.country" class="invalid-feedback" id="countryError">
+                {{ errors.country }}
+              </div>
+            </div>
+            <div class="col">
+              <label for="postcode">Postcode</label>
+              <input
+                type="text"
+                id="postcode"
+                v-model="formData.postcode"
+                class="form-control"
+                :class="{ 'is-invalid': errors.postcode }"
+                placeholder="Enter your postcode"
+                required
+                aria-required="true"
+                aria-describedby="postcodeError"
+              />
+              <div v-if="errors.postcode" class="invalid-feedback" id="postcodeError">
+                {{ errors.postcode }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="role">Role</label>
+          <select
+            id="role"
+            v-model="formData.role"
+            class="form-control"
+            :class="{ 'is-invalid': errors.role }"
+            required
+            aria-required="true"
+            aria-describedby="roleError"
+          >
+            <option value="" disabled>Select your role</option>
+            <option value="researcher">Researcher</option>
+            <option value="member">Member</option>
+          </select>
+          <div v-if="errors.role" class="invalid-feedback" id="roleError">{{ errors.role }}</div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6 col-sm-6 form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              @blur="() => validatePassword(true)"
+              @input="() => validatePassword(false)"
+              v-model="formData.password"
+              aria-describedby="passwordRequirements passwordError"
+              required
+              aria-required="true"
+            />
+            <div class="text-danger" v-if="errors.password" id="passwordError">
+              {{ errors.password }}
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPassword"
+              v-model="formData.confirmPassword"
+              @blur="() => validateConfirmPassword(true)"
+              aria-describedby="confirmPasswordError"
+              required
+              aria-required="true"
+            />
+            <div class="text-danger" v-if="errors.confirmPassword" id="confirmPasswordError">
+              {{ errors.confirmPassword }}
+            </div>
+          </div>
+        </div>
+        <div class="text-muted" id="passwordRequirements">
+          Password must be at least 8 characters long and contain at least one number, and one
+          special character.
+        </div>
+
+        <div class="form-group mb-3 form-check">
+          <input
+            type="checkbox"
+            id="subscribe"
+            v-model="formData.subscribe"
+            class="form-check-input"
+          />
+          <label for="subscribe" class="form-check-label">Subscribe to our newsletter</label>
+        </div>
+
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">Sign Up</button>
+        </div>
       </div>
     </form>
     <div class="text-center mt-3">

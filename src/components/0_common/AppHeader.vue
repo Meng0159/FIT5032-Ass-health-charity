@@ -9,6 +9,7 @@
             class="navbar-brand"
             to="/"
             style="display: flex; align-items: center; padding-left: 15px"
+            tabindex="0"
           >
             <img src="@/assets/images/brain-flower.jpeg" alt="Logo" height="40" />
             <h4 style="margin-left: 10px; margin-bottom: 0">MindSupport</h4>
@@ -22,13 +23,20 @@
 
         <!-- Conditional display of Login/Sign Up or Logout button -->
         <div class="col-auto d-none d-lg-flex">
-          <router-link v-if="!isAuthenticated" class="btn btn-outline-light mx-2" to="/login">
+          <router-link
+            v-if="!isAuthenticated"
+            class="btn btn-outline-light mx-2"
+            to="/login"
+            tabindex="0"
+          >
             Login
           </router-link>
-          <router-link v-if="!isAuthenticated" class="btn btn-light mx-2" to="/signup">
+          <router-link v-if="!isAuthenticated" class="btn btn-light mx-2" to="/signup" tabindex="0">
             Sign Up
           </router-link>
-          <button v-if="isAuthenticated" class="btn btn-light mx-2" @click="logout">Logout</button>
+          <button v-if="isAuthenticated" class="btn btn-light mx-2" @click="logout" tabindex="0">
+            Logout
+          </button>
         </div>
 
         <!-- Toggler for smaller screens -->

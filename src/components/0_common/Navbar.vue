@@ -4,7 +4,13 @@
   <ul :class="['nav nav-pills nav-justified', isSidebarOpen ? 'flex-column' : 'd-flex flex-row']">
     <li v-for="link in links" :key="link.href" :class="['nav-item', { dropdown: link.dropdown }]">
       <template v-if="!link.dropdown">
-        <router-link class="nav-link" active-class="active" aria-current="page" :to="link.href">
+        <router-link
+          class="nav-link"
+          active-class="active"
+          aria-current="page"
+          :to="link.href"
+          tabindex="0"
+        >
           {{ link.text }}
         </router-link>
       </template>
@@ -15,12 +21,15 @@
           role="button"
           data-bs-toggle="dropdown"
           aria-expanded="false"
+          tabindex="0"
         >
           {{ link.text }}
         </a>
         <ul class="dropdown-menu">
           <li v-for="subLink in link.sublinks" :key="subLink.href">
-            <router-link class="dropdown-item" :to="subLink.href">{{ subLink.text }}</router-link>
+            <router-link class="dropdown-item" :to="subLink.href" tabindex="0">{{
+              subLink.text
+            }}</router-link>
           </li>
         </ul>
       </template>
@@ -84,6 +93,23 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Example focus styles */
+.nav-link:focus,
+.btn:focus,
+.dropdown-toggle:focus {
+  outline: 3px solid #ffc107; /* Yellow focus outline */
+  outline-offset: 2px;
+  border-radius: 5px;
+}
+
+/* Focused state for buttons */
+.navbar-toggler:focus,
+.btn-close:focus,
+.btn:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 
 .dropdown {

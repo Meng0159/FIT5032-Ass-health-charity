@@ -43,6 +43,10 @@
       <button @click="showTripDetails" class="trip-button" :disabled="!userLocationInput">
         Get Trip Details
       </button>
+      <!-- Add a button for text-to-speech next to the trip details -->
+      <button v-if="tripDetails" @click="playTripDetails" class="btn btn-secondary">
+        Play Trip Details
+      </button>
       <div v-if="tripDetails" class="trip-details">
         <h4>
           <span class="trip-icon" @click="playTripDetails">
@@ -269,6 +273,24 @@ function showTripDetails() {
   if (selectedPartner.value && userLocationInput.value) {
     tripDetails.value = calculateTripDetails()
   }
+}
+
+function playTripDetails() {
+  if (!tripDetails.value) return
+
+  const utterance = new SpeechSynthesisUtterance()
+
+  const fromLocation = `From: ${userLocationInput.value || 'your current location'}.`
+  const toLocation = `To: ${selectedPartner.value.name}, located at ${selectedPartner.value.address}.`
+  const distance = `The distance is approximately ${tripDetails.value.distance} kilometers.`
+  const duration = `It will take around ${tripDetails.value.duration} minutes.`
+  const transport = `Suggested transport: ${tripDetails.value.transport}.`
+
+  utterance.text = `${fromLocation} ${toLocation} ${distance} ${duration} ${transport}`
+  utterance.lang = 'en-AU' // Set language to Australian English
+  utterance.rate = 1 // Set speech rate
+
+  speechSynthesis.speak(utterance)
 }
 
 onMounted(() => {
