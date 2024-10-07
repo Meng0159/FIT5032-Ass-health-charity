@@ -12,6 +12,9 @@
       conduct research and develop resources that can help individuals and communities.
     </p>
     <h2>Publish Your Research</h2>
+    <div v-if="!isOnline" style="color: red">
+      You are currently offline. Some features may not be available.
+    </div>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
         <label for="name">Name:</label>
@@ -75,7 +78,6 @@ export default {
   name: 'PublishForm',
   setup() {
     const db = getFirestore()
-
     const formData = ref({
       name: '',
       institute: '',
@@ -115,9 +117,71 @@ export default {
       }
     }
 
+    // Consider online/offline status
+    const isOnline = ref(navigator.onLine)
+
+    window.addEventListener('online', () => {
+      isOnline.value = true
+      console.log('You are online!')
+    })
+
+    window.addEventListener('offline', () => {
+      isOnline.value = false
+      console.log('You are offline!')
+    })
+
+    const syncStoredPublication = async () => {
+      const storedPublication = localStorage.getItem('submitedPublication')
+        ? JSON.parse(localStorage.getItem('submitedPublication'))
+        : []
+
+      if (storedPublication.length > 0) {
+        storedPublication.forEach(async (publication) => {
+          try {
+            await addDoc(collection(db, 'publications'), publication)
+            console.log('Synced publication:', publication)
+          } catch (error) {
+            console.error('Error syncing publication:', error)
+          }
+        })
+        // Clear after syncing
+        localStorage.removeItem('submitedPublication')
+        console.log(
+          'Checking if localStorage is cleared:',
+          localStorage.getItem('submitedPublication') === null
+        )
+      }
+    }
+
+    // Call this when the user comes back online
+    window.addEventListener('online', syncStoredPublication)
+
+    // To store offline registration
+    const storePublicationOffline = async () => {
+      if (!isOnline.value) {
+        const publicationData = {
+          name: formData.value.name || '',
+          institute: formData.value.institute || '',
+          topic: formData.value.topic || '',
+          field: formData.value.field || '',
+          keywords: formData.value.keywords || '',
+          content: formData.value.content || ''
+        }
+        let storePublications = localStorage.getItem('submitedPublication')
+          ? JSON.parse(localStorage.getItem('submitedPublication'))
+          : []
+        storePublications.push(publicationData)
+        localStorage.setItem('submitedPublication', JSON.stringify(storePublications))
+        console.log('Stored publication offline:', localStorage.getItem('submitedPublication'))
+      }
+    }
+
+    window.addEventListener('offline', storePublicationOffline)
+
     return {
       formData,
-      handleSubmit
+      handleSubmit,
+      isOnline
     }
   }
 }

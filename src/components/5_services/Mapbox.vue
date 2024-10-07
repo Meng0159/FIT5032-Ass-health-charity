@@ -17,21 +17,26 @@
             <button @click="useCurrentLocation" class="btn btn-secondary w-95">
               Use My Location
             </button>
-            <button @click="setUserLocationFromInput" class="btn btn-success w-95">
+            <button @click="setUserLocationFromInput" class="btn btn-primary w-95">
               Go Location
             </button>
           </div>
         </div>
 
         <div class="col-md-6 partner-search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            @keyup.enter="searchByPostcode"
-            placeholder="Enter postcode to find nearest partner"
-            class="form-control"
-          />
-          <button @click="startVoiceSearch" class="btn btn-secondary w-25">Voice Search</button>
+          <div class="col">
+            <input
+              type="text"
+              v-model="searchQuery"
+              @keyup.enter="searchByPostcode"
+              placeholder="Enter postcode to find nearest partner"
+              class="form-control"
+            />
+            <button @click="startVoiceSearch" class="btn btn-secondary w-25 mt-2">
+              Voice Search
+            </button>
+          </div>
+
           <button @click="searchByPostcode" class="btn btn-primary w-25">Search</button>
         </div>
       </div>
@@ -198,6 +203,37 @@ function updateUserMarker() {
     center: userLocation.value,
     zoom: 12
   })
+}
+function startVoiceSearch() {
+  // Check if the browser supports the SpeechRecognition API
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+  if (!SpeechRecognition) {
+    locationError.value = 'Voice search is not supported in your browser.'
+    return
+  }
+
+  const recognition = new SpeechRecognition()
+  recognition.lang = 'en-AU' // Set language to Australian English
+  recognition.interimResults = false
+  recognition.maxAlternatives = 1
+
+  recognition.onstart = () => {
+    console.log('Voice recognition started. Please speak.')
+  }
+
+  recognition.onresult = (event) => {
+    const speechResult = event.results[0][0].transcript
+    console.log('Result received:', speechResult)
+    searchQuery.value = speechResult // Set the input value to the spoken text
+
+    searchByPostcode() // Process the location
+  }
+
+  recognition.onerror = (event) => {
+    locationError.value = 'Voice recognition error: ' + event.error
+  }
+
+  recognition.start()
 }
 
 function searchByPostcode() {
