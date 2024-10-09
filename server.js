@@ -18,7 +18,7 @@ import cors from 'cors'
 app.use(express.json({ limit: '10mb' }))
 app.use(
   cors({
-    origin: 'http://localhost:5173' // Your Vue.js frontend URL
+    origin: 'http://localhost:5173' // 'http://localhost:5173' Vue.js frontend URL
   })
 )
 import sgMail from '@sendgrid/mail'
@@ -76,5 +76,5 @@ app.post('/api/send-bulkEmail', async (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`)
+  console.log(`Server is running on deployed site :${PORT}`)
 })
