@@ -401,11 +401,12 @@ const submitDonation = async () => {
       console.log('Donation successfully stored in Firestore')
 
       // Trigger SendGridAPI to send the invoice email
-      const response = await fetch('http://localhost:3000/api/send-email', {
+      const response = await fetch('https://fit5032-ass-health-charity.pages.dev/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
+        mode: 'no-cors', // Set mode to 'no-cors' to avoid CORS error
         body: JSON.stringify(donationData)
       })
 
