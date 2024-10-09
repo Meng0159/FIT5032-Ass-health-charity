@@ -3,7 +3,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
-
+import cors from 'cors'
 // ES Module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -16,7 +16,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 // Middleware
-import cors from 'cors'
+
 // Middleware
 app.use(
   cors({
@@ -36,6 +36,9 @@ app.use(
     }
   })
 )
+
+// Handle preflight requests
+app.options('*', cors())
 // app.use(
 //   cors({
 //     origin: 'https://fit5032-ass-health-charity.pages.dev' // 'http://localhost:5173' Vue.js frontend URL
