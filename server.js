@@ -14,14 +14,30 @@ dotenv.config()
 const app = express()
 // Use environment variable PORT, or fallback to 3000 in local development
 const PORT = process.env.PORT || 3000
-import cors from 'cors'
+
 // Middleware
-app.use(express.json({ limit: '10mb' }))
 app.use(
-  cors({
-    origin: 'https://fit5032-ass-health-charity.pages.dev/' // 'http://localhost:5173' Vue.js frontend URL
+  cors((req, callback) => {
+    const allowedOrigins = [
+      'https://fit5032-ass-health-charity.pages.dev',
+      'https://e04c-103-224-53-141.ngrok-free.app' // You can add your ngrok URL if needed
+    ]
+    const origin = req.headers.origin
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
   })
 )
+
+// app.use(express.json({ limit: '10mb' }))
+// import cors from 'cors'
+// app.use(
+//   cors({
+//     origin: 'https://fit5032-ass-health-charity.pages.dev' // 'http://localhost:5173' Vue.js frontend URL
+//   })
+// )
 import sgMail from '@sendgrid/mail'
 // Set your SendGrid API key
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
