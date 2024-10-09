@@ -372,7 +372,6 @@ const sendBulkEmail = async () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      mode: 'no-cors', // Set mode to 'no-cors' to avoid CORS error
       body: JSON.stringify(emailDetails)
     })
 
