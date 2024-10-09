@@ -367,13 +367,16 @@ const sendBulkEmail = async () => {
   }
 
   try {
-    const response = await fetch('http://localhost:3000/api/send-bulkEmail', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(emailDetails)
-    })
+    const response = await fetch(
+      'https://524250ec.fit5032-ass-health-charity.pages.dev/api/send-bulkEmail',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(emailDetails)
+      }
+    )
 
     if (response.ok) {
       alert('Bulk email sent successfully')

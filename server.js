@@ -18,7 +18,7 @@ import cors from 'cors'
 app.use(express.json({ limit: '10mb' }))
 app.use(
   cors({
-    origin: 'http://localhost:5173' // 'http://localhost:5173' Vue.js frontend URL
+    origin: 'https://524250ec.fit5032-ass-health-charity.pages.dev/' // 'http://localhost:5173' Vue.js frontend URL
   })
 )
 import sgMail from '@sendgrid/mail'
