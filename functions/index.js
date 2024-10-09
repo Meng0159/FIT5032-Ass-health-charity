@@ -53,12 +53,21 @@ exports.monitorEventCapacity = onRequest(async (req, res) => {
   })
 })
 
-// function to fetch publications from Firestore
+// function to fetch publications from Firestore to sync only new publications ( user may just summitted)
+
 exports.getPublications = onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
+      const { timestamp } = req.query // Accept a timestamp query param
       const publicationsRef = db.collection('publications')
-      const snapshot = await publicationsRef.get()
+
+      let query = publicationsRef
+      if (timestamp) {
+        const time = new Date(parseInt(timestamp))
+        query = query.where('publicationId', '>', time) // Filter by publicationId field
+      }
+
+      const snapshot = await query.get()
 
       if (snapshot.empty) {
         return res.status(404).send({ message: 'No publications found' })
@@ -66,13 +75,31 @@ exports.getPublications = onRequest(async (req, res) => {
 
       const publications = []
       snapshot.forEach((doc) => {
-        publications.push({
-          id: doc.id,
-          ...doc.data()
-        })
+        const data = doc.data()
+
+        // Filter out publications with empty fields
+        if (
+          data.topic &&
+          data.topic.length > 0 &&
+          data.field &&
+          data.field.length > 0 &&
+          data.keywords &&
+          data.keywords.length > 0 &&
+          data.content &&
+          data.content.length > 0 &&
+          data.name &&
+          data.name.length > 0 &&
+          data.institute &&
+          data.institute.length > 0
+        ) {
+          publications.push({
+            id: doc.id,
+            ...data
+          })
+        }
       })
 
-      res.status(200).send(publications) // Send publications as JSON
+      res.status(200).send(publications)
     } catch (error) {
       console.error('Error fetching publications:', error)
       res.status(500).send({ message: 'Internal Server Error' })

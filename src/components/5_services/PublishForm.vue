@@ -72,7 +72,7 @@
 <script>
 import { ref } from 'vue'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, collection, addDoc } from 'firebase/firestore'
+import { Timestamp, getFirestore, collection, addDoc } from 'firebase/firestore'
 
 export default {
   name: 'PublishForm',
@@ -93,7 +93,7 @@ export default {
       const newPublication = {
         ...formData.value,
         userId: user.uid,
-        publicationId: Date.now(),
+        publicationId: Timestamp.now(),
         date: new Date().toLocaleDateString()
       }
 

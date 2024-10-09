@@ -13,7 +13,6 @@
       <h3>Your Publications</h3>
       <DataTable :value="tableData">
         <Column field="topic" header="Topic" />
-        <Column field="institute" header="Institute" />
         <Column field="keywords" header="Keywords" />
         <Column field="date" header="Publication Date" />
       </DataTable>
@@ -73,6 +72,7 @@ const fetchUserData = async () => {
 
 // Fetch either publications or event registrations based on role
 const fetchTableData = async () => {
+  console.log('isResearcher:', isResearcher.value)
   if (isResearcher.value) {
     const publicationsQuery = query(
       collection(db, 'publications'),
@@ -82,9 +82,7 @@ const fetchTableData = async () => {
     tableData.value = querySnapshot.docs.map((doc) => {
       const data = doc.data()
       return {
-        ...data,
-        id: doc.id, // Include the document ID
-        date: data.date.toDate().toLocaleDateString() // Format as date
+        ...data
       }
     })
   } else {
