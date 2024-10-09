@@ -16,23 +16,25 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 // Middleware
+import cors from 'cors'
 app.use(
-  cors((req, callback) => {
-    const allowedOrigins = [
-      'https://fit5032-ass-health-charity.pages.dev',
-      'https://e04c-103-224-53-141.ngrok-free.app' // You can add your ngrok URL if needed
-    ]
-    const origin = req.headers.origin
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true)
+
+      // Check if the origin matches the regex
+      const regex = /^https:\/\/.*\.fit5032-ass-health-charity\.pages\.dev$/
+      if (regex.test(origin)) {
+        callback(null, true) // Allow the request
+      } else {
+        callback(new Error('Not allowed by CORS')) // Block the request
+      }
     }
   })
 )
 
-// app.use(express.json({ limit: '10mb' }))
-// import cors from 'cors'
+app.use(express.json({ limit: '10mb' }))
 // app.use(
 //   cors({
 //     origin: 'https://fit5032-ass-health-charity.pages.dev' // 'http://localhost:5173' Vue.js frontend URL
