@@ -17,29 +17,32 @@ const PORT = process.env.PORT || 3000
 
 // Middleware
 import cors from 'cors'
+// Middleware
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true)
 
-      // Check if the origin matches the regex
+      // Check if the origin matches the regex for subdomains
       const regex = /^https:\/\/.*\.fit5032-ass-health-charity\.pages\.dev$/
       if (regex.test(origin)) {
         callback(null, true) // Allow the request
+      } else if (origin === 'https://fit5032-ass-health-charity.pages.dev') {
+        callback(null, true) // Allow the main domain
       } else {
         callback(new Error('Not allowed by CORS')) // Block the request
       }
     }
   })
 )
-
-app.use(express.json({ limit: '10mb' }))
 // app.use(
 //   cors({
 //     origin: 'https://fit5032-ass-health-charity.pages.dev' // 'http://localhost:5173' Vue.js frontend URL
 //   })
 // )
+app.use(express.json({ limit: '10mb' }))
+
 import sgMail from '@sendgrid/mail'
 // Set your SendGrid API key
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
