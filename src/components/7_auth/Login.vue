@@ -254,7 +254,7 @@ onMounted(() => {
   const currentUser = JSON.parse(localStorage.getItem('currentUser'))
 
   if (currentUser?.isLoggedIn) {
-    if (currentUser.rememberMe) {
+    if (currentUser.longerToken) {
       alert('Welcome back!')
     }
     router.push('/') // Redirect to home if already logged in

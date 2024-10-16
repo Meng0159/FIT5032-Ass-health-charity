@@ -367,7 +367,7 @@ const sendBulkEmail = async () => {
   }
 
   try {
-    const response = await fetch('https://45e2-103-224-53-141.ngrok-free.app/api/send-bulkEmail', {
+    const response = await fetch('https://f627-118-139-31-204.ngrok-free.app/api/send-bulkEmail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -401,7 +401,7 @@ const submitDonation = async () => {
       console.log('Donation successfully stored in Firestore')
 
       // Trigger SendGridAPI to send the invoice email
-      const response = await fetch('https://45e2-103-224-53-141.ngrok-free.app/api/send-email', {
+      const response = await fetch('https://f627-118-139-31-204.ngrok-free.app/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
