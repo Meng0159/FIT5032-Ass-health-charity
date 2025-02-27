@@ -14,8 +14,15 @@
     <section class="about">
       <h2>About Us</h2>
       <p>
-        Mind Support is a mental health organization that provides support and information to help
-        everyone in Australia achieve their best possible mental health.
+        Our mission is to build reliable, scalable, and high-quality software solutions for mental
+        health organizations. By leveraging cutting-edge technology and innovative approaches, we
+        aim to empower these organizations to provide better support, resources, and information to
+        individuals across Australia, ultimately enhancing the overall mental well-being of the
+        community. We collaborate with mental health professionals and organizations to develop and
+        maintain a robust system using
+        <strong>Express server, Google Firebase, and Cloud Functions</strong>. Our API
+        implementations ensure seamless integration and efficient data management, providing a
+        reliable platform for mental health services.
       </p>
       <router-link to="/about" class="btn btn-primary">Learn More</router-link>
     </section>
